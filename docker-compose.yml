@@ -1,0 +1,146 @@
+services:
+
+  deluge:
+    container_name: deluge
+    image: 'linuxserver/deluge:latest'
+    restart: unless-stopped
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      - '${ROOT}/config/deluge:/config'
+      - '${HDDSTORAGE3}:/torrents'
+    ports:
+      - '32410:8112'
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - 'TZ=${TZ}'
+    volumes:
+      - '${ROOT}/config/prowlarr:/config'
+    restart: unless-stopped
+    ports:
+      - '32406:9696'
+
+  sonarr:
+    container_name: sonarr
+    image: 'linuxserver/sonarr:latest'
+    restart: unless-stopped
+      #network_mode: host
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - '${ROOT}/config/sonarr:/config'
+      - '${HDDSTORAGE1}:/media1'
+      - '${HDDSTORAGE2}:/media2'
+      - '${HDDSTORAGE3}:/torrents'
+    ports:
+      - "32402:8989"
+
+  radarr:
+    container_name: radarr
+    image: 'linuxserver/radarr:latest'
+    restart: unless-stopped
+      #network_mode: host
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - '${ROOT}/config/radarr:/config'
+      - '${HDDSTORAGE1}:/media1'
+      - '${HDDSTORAGE2}:/media2'
+      - '${HDDSTORAGE3}:/torrents'  
+    ports:
+      - "32403:7878"  
+      
+  lidarr:
+    container_name: lidarr
+    image: linuxserver/lidarr:develop
+    restart: unless-stopped
+      #network_mode: host
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - '${ROOT}/config/lidarr:/config'
+      - '${HDDSTORAGE2}:/media2'
+      - '${HDDSTORAGE3}:/torrents'  
+    ports:
+      - "32405:8686"
+
+  readarr:
+    container_name: readarr
+    image:  linuxserver/readarr:develop
+    restart: unless-stopped
+      #network_mode: host
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - '${ROOT}/config/readdarr:/config'
+      - '${HDDSTORAGE2}:/media2'
+      - '${HDDSTORAGE3}:/torrents'
+    ports:
+      - "32404:8787"    
+
+  bazarr:
+    container_name: bazarr
+    image: 'linuxserver/bazarr:latest'
+    restart: unless-stopped
+    #network_mode: host
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+      - UMASK_SET=022
+    volumes:
+      - '${ROOT}/config/bazarr:/config'
+      - '${HDDSTORAGE1}:/media2'
+      - '${HDDSTORAGE2}:/media2'
+      - '${HDDSTORAGE3}:/torrents'
+    ports:
+      - '32407:6767'
+
+
+### Optional Containers
+
+# Tdarr
+
+  overseerr:
+    image: 'sctx/overseerr:latest'
+    container_name: overseerr
+    environment:
+      - LOG_LEVEL=debug
+      - 'TZ=${TZ}'
+    ports:
+      - '32408:5055'
+    volumes:
+      - '${ROOT}/config/overseerr/config:/app/config'
+    restart: unless-stopped
+
+  flaresolverr:
+    # DockerHub mirror flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - 'TZ=${TZ}'
+    ports:
+      - "${PORT:-32409}:8191"
+    restart: unless-stopped
