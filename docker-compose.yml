@@ -1,32 +1,4 @@
 services:
-
-  deluge:
-    container_name: deluge
-    image: 'linuxserver/deluge:latest'
-    restart: unless-stopped
-    environment:
-      - 'PUID=${PUID}'
-      - 'PGID=${PGID}'
-      - 'TZ=${TZ}'
-    volumes:
-      - '${ROOT}/config/deluge:/config'
-      - '${HDDSTORAGE3}:/torrents'
-    ports:
-      - '32410:8112'
-
-  prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
-    container_name: prowlarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - 'TZ=${TZ}'
-    volumes:
-      - '${ROOT}/config/prowlarr:/config'
-    restart: unless-stopped
-    ports:
-      - '32406:9696'
-
   sonarr:
     container_name: sonarr
     image: 'linuxserver/sonarr:latest'
@@ -44,7 +16,6 @@ services:
       - '${HDDSTORAGE3}:/torrents'
     ports:
       - "32402:8989"
-
   radarr:
     container_name: radarr
     image: 'linuxserver/radarr:latest'
@@ -62,24 +33,6 @@ services:
       - '${HDDSTORAGE3}:/torrents'  
     ports:
       - "32403:7878"  
-      
-  lidarr:
-    container_name: lidarr
-    image: linuxserver/lidarr:develop
-    restart: unless-stopped
-      #network_mode: host
-    environment:
-      - 'PUID=${PUID}'
-      - 'PGID=${PGID}'
-      - 'TZ=${TZ}'
-    volumes:
-      - '/etc/localtime:/etc/localtime:ro'
-      - '${ROOT}/config/lidarr:/config'
-      - '${HDDSTORAGE2}:/media2'
-      - '${HDDSTORAGE3}:/torrents'  
-    ports:
-      - "32405:8686"
-
   readarr:
     container_name: readarr
     image:  linuxserver/readarr:develop
@@ -95,13 +48,39 @@ services:
       - '${HDDSTORAGE2}:/media2'
       - '${HDDSTORAGE3}:/torrents'
     ports:
-      - "32404:8787"    
-
+      - "32404:8787"
+  lidarr:
+    container_name: lidarr
+    image: linuxserver/lidarr:develop
+    restart: unless-stopped
+      #network_mode: host
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - '${ROOT}/config/lidarr:/config'
+      - '${HDDSTORAGE2}:/media2'
+      - '${HDDSTORAGE3}:/torrents'  
+    ports:
+      - "32405:8686" 
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - 'TZ=${TZ}'
+    volumes:
+      - '${ROOT}/config/prowlarr:/config'
+    restart: unless-stopped
+    ports:
+      - '32406:9696'
   bazarr:
     container_name: bazarr
     image: 'linuxserver/bazarr:latest'
     restart: unless-stopped
-    #network_mode: host
     environment:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
@@ -114,12 +93,6 @@ services:
       - '${HDDSTORAGE3}:/torrents'
     ports:
       - '32407:6767'
-
-
-### Optional Containers
-
-# Tdarr
-
   overseerr:
     image: 'sctx/overseerr:latest'
     container_name: overseerr
@@ -131,9 +104,7 @@ services:
     volumes:
       - '${ROOT}/config/overseerr/config:/app/config'
     restart: unless-stopped
-
   flaresolverr:
-    # DockerHub mirror flaresolverr/flaresolverr:latest
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
     environment:
@@ -144,3 +115,16 @@ services:
     ports:
       - "${PORT:-32409}:8191"
     restart: unless-stopped
+  deluge:
+    container_name: deluge
+    image: 'linuxserver/deluge:latest'
+    restart: unless-stopped
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      - '${ROOT}/config/deluge:/config'
+      - '${HDDSTORAGE3}:/torrents'
+    ports:
+      - '32410:8112'
