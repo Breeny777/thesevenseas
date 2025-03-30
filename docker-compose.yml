@@ -3,7 +3,6 @@ services:
     container_name: sonarr
     image: 'linuxserver/sonarr:latest'
     restart: unless-stopped
-      #network_mode: host
     environment:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
@@ -20,7 +19,6 @@ services:
     container_name: radarr
     image: 'linuxserver/radarr:latest'
     restart: unless-stopped
-      #network_mode: host
     environment:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
@@ -37,7 +35,6 @@ services:
     container_name: readarr
     image:  linuxserver/readarr:develop
     restart: unless-stopped
-      #network_mode: host
     environment:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
@@ -53,7 +50,6 @@ services:
     container_name: lidarr
     image: linuxserver/lidarr:develop
     restart: unless-stopped
-      #network_mode: host
     environment:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
@@ -88,7 +84,7 @@ services:
       - UMASK_SET=022
     volumes:
       - '${ROOT}/config/bazarr:/config'
-      - '${HDDSTORAGE1}:/media2'
+      - '${HDDSTORAGE1}:/media1'
       - '${HDDSTORAGE2}:/media2'
       - '${HDDSTORAGE3}:/torrents'
     ports:
