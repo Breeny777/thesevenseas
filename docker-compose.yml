@@ -212,6 +212,7 @@ services:
       - 'TZ=${TZ}'
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
+      - PASSWORD= 
     volumes:
       - '${ROOT}/config/calibre:/config'
       - '${HDDSTORAGE2}:/media2'
