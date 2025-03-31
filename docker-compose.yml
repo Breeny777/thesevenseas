@@ -191,4 +191,16 @@ services:
           devices:
             - driver: nvidia
               count: all
-              capabilities: [gpu,video]
+              capabilities: [gpu,video]           
+  tautulli:
+    image: ghcr.io/tautulli/tautulli
+    container_name: tautulli
+    restart: unless-stopped
+    volumes:
+      - '${ROOT}/config/tautulli:/config'
+    environment:
+      - 'TZ=${TZ}'
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+    ports:
+      - 32412:8181
