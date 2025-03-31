@@ -137,7 +137,7 @@ services:
       - serverIP=192.168.4.5
       - serverPort=8266
       - webUIPort=8265
-      - internalNode=true
+      - internalNode=false
       - inContainer=true
       - ffmpegVersion=7
       - nodeName=plexhost
@@ -153,22 +153,22 @@ services:
 
     devices:
       - /dev/dri:/dev/dri
-    deploy:
-      resources:
-        reservations:
-          devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu]
+        # deploy:
+        # resources:
+        # reservations:
+        # devices:
+        # - driver: nvidia
+        # count: all
+        # capabilities: [gpu]
   tdarr-node:
-    container_name: tdarr-node
+    container_name: tdarr_node
     image: ghcr.io/haveagitgat/tdarr_node:latest
     restart: unless-stopped
     network_mode: service:tdarr
     environment:
       - 'TZ=${TZ}'
       - UMASK_SET=002
-      - nodeName=plexhost
+      - nodeName=Node1
       - serverIP=192.168.4.5
       - serverPort=8266
       - inContainer=true
@@ -189,6 +189,6 @@ services:
       resources:
         reservations:
           devices:
-          - driver: nvidia
-            count: all
-            capabilities: [gpu]
+            - driver: nvidia
+              count: all
+              capabilities: [gpu,video]
