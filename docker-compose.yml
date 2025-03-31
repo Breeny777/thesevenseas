@@ -204,3 +204,18 @@ services:
       - 'PGID=${PGID}'
     ports:
       - 32412:8181
+  calibre:
+    image: lscr.io/linuxserver/calibre:latest
+    container_name: calibre
+    restart: unless-stopped
+    environment:
+      - 'TZ=${TZ}'
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+    volumes:
+      - '${ROOT}/config/calibre:/config'
+    ports:
+      - 32413:8080
+      - 8181:8181
+      - 8081:8081
+    
