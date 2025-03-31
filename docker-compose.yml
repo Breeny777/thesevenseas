@@ -214,6 +214,7 @@ services:
       - 'PGID=${PGID}'
     volumes:
       - '${ROOT}/config/calibre:/config'
+      - '${HDDSTORAGE2}:/media2'
     ports:
       - 32413:8080
       - 8181:8181
