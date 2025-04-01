@@ -73,33 +73,7 @@ services:
     restart: unless-stopped
     ports:
       - '32406:9696'
-  bazarr:
-    container_name: bazarr
-    image: 'linuxserver/bazarr:latest'
-    restart: unless-stopped
-    environment:
-      - 'PUID=${PUID}'
-      - 'PGID=${PGID}'
-      - 'TZ=${TZ}'
-      - UMASK_SET=022
-    volumes:
-      - '${ROOT}/config/bazarr:/config'
-      - '${HDDSTORAGE1}:/media1'
-      - '${HDDSTORAGE2}:/media2'
-      - '${HDDSTORAGE3}:/torrents'
-    ports:
-      - '32407:6767'
-  overseerr:
-    image: 'sctx/overseerr:latest'
-    container_name: overseerr
-    environment:
-      - LOG_LEVEL=debug
-      - 'TZ=${TZ}'
-    ports:
-      - '32408:5055'
-    volumes:
-      - '${ROOT}/config/overseerr/config:/app/config'
-    restart: unless-stopped
+
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
@@ -192,18 +166,7 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu,video]           
-  tautulli:
-    image: ghcr.io/tautulli/tautulli
-    container_name: tautulli
-    restart: unless-stopped
-    volumes:
-      - '${ROOT}/config/tautulli:/config'
-    environment:
-      - 'TZ=${TZ}'
-      - 'PUID=${PUID}'
-      - 'PGID=${PGID}'
-    ports:
-      - 32412:8181
+ 
   calibre:
     image: lscr.io/linuxserver/calibre:latest
     container_name: calibre
@@ -220,4 +183,47 @@ services:
       - 32413:8080
       - 8181:8181
       - 8081:8081
+
+# Optional containers
+  # tautulli:
+  #   image: ghcr.io/tautulli/tautulli
+  #   container_name: tautulli
+  #   restart: unless-stopped
+  #   volumes:
+  #     - '${ROOT}/config/tautulli:/config'
+  #   environment:
+  #     - 'TZ=${TZ}'
+  #     - 'PUID=${PUID}'
+  #     - 'PGID=${PGID}'
+  #   ports:
+  #     - 32412:8181
+
+  # bazarr:
+  #   container_name: bazarr
+  #   image: 'linuxserver/bazarr:latest'
+  #   restart: unless-stopped
+  #   environment:
+  #     - 'PUID=${PUID}'
+  #     - 'PGID=${PGID}'
+  #     - 'TZ=${TZ}'
+  #     - UMASK_SET=022
+  #   volumes:
+  #     - '${ROOT}/config/bazarr:/config'
+  #     - '${HDDSTORAGE1}:/media1'
+  #     - '${HDDSTORAGE2}:/media2'
+  #     - '${HDDSTORAGE3}:/torrents'
+  #   ports:
+  #     - '32407:6767'
+  
+  # overseerr:
+  #   image: 'sctx/overseerr:latest'
+  #   container_name: overseerr
+  #   environment:
+  #     - LOG_LEVEL=debug
+  #     - 'TZ=${TZ}'
+  #   ports:
+  #     - '32408:5055'
+  #   volumes:
+  #     - '${ROOT}/config/overseerr/config:/app/config'
+  #   restart: unless-stopped
     
