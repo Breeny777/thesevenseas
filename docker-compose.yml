@@ -230,20 +230,7 @@ services:
     volumes:
       - '${ROOT}/config/overseerr/config:/app/config'
     restart: unless-stopped
-
-#   yacht:
-#     container_name: yacht
-#     restart: unless-stopped
-#     ports:
-#       - 32414:8000
-#     volumes:
-#       - yacht:/config
-#       - /var/run/docker.sock:/var/run/docker.sock
-#     image: selfhostedpro/yacht
-
-# volumes:
-#   yacht:  
-    
+ 
   portainer:
     image: portainer/portainer-ce:latest
     ports:
