@@ -231,13 +231,13 @@ services:
       - '${ROOT}/config/overseerr/config:/app/config'
     restart: unless-stopped
  
-#   portainer:
-#     image: portainer/portainer-ce:latest
-#     ports:
-#       - 32415:9443
-#     volumes:
-#         - data:/data
-#         - /var/run/docker.sock:/var/run/docker.sock
-#     restart: unless-stopped
-# volumes:
-#   data:
+  portainer:
+    image: portainer/portainer-ce:latest
+    ports:
+      - 32415:9443
+    volumes:
+        - data:/data
+        - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+volumes:
+  data:
