@@ -239,5 +239,18 @@ services:
         - data:/data
         - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
-volumes:
-  data:
+
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      - '${ROOT}/config/sabnzbd:/config'
+      - '${HDDSTORAGE3}:/downloads' #optional
+      - '${HDDSTORAGE3}:/incomplete-downloads' #optional
+    ports:
+      - 32416:8080
+    restart: unless-stopped
