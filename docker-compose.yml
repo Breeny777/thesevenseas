@@ -240,19 +240,19 @@ services:
       - 'TZ=${TZ}'
     volumes:
       - '${ROOT}/config/sabnzbd:/config'
-      - '${HDDSTORAGE3}:/downloads' #optional
-      - '${HDDSTORAGE3}:/incomplete-downloads' #optional
+      # - '${HDDSTORAGE3}:/downloads'
+      # - '${HDDSTORAGE3}:/incomplete-downloads'
     ports:
       - 32416:8080
     restart: unless-stopped
 
- #   portainer:
- #     image: portainer/portainer-ce:latest
- #     ports:
- #       - 32415:9443
- #     volumes:
- #         - data:/data
- #         - /var/run/docker.sock:/var/run/docker.sock
- #     restart: unless-stopped
- # volumes:
- #   data:  
+  portainer:
+     image: portainer/portainer-ce:latest
+     ports:
+       - 32415:9443
+     volumes:
+         - data:/data
+         - /var/run/docker.sock:/var/run/docker.sock
+     restart: unless-stopped
+  volumes:
+   data:  
