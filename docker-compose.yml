@@ -239,8 +239,8 @@ services:
         - data:/data
         - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
-  volumes:
-   data:
+volumes:
+  data:
 
   sabnzbd:
     image: lscr.io/linuxserver/sabnzbd:latest
