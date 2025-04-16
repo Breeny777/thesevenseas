@@ -231,20 +231,20 @@ services:
       - '${ROOT}/config/overseerr/config:/app/config'
     restart: unless-stopped
  
-  sabnzbd:
-    image: lscr.io/linuxserver/sabnzbd:latest
-    container_name: sabnzbd
-    environment:
-      - 'PUID=${PUID}'
-      - 'PGID=${PGID}'
-      - 'TZ=${TZ}'
-    volumes:
-      - '${ROOT}/config/sabnzbd:/config'
-      # - '${HDDSTORAGE3}:/downloads'
-      # - '${HDDSTORAGE3}:/incomplete-downloads'
-    ports:
-      - 32416:8080
-    restart: unless-stopped
+  # sabnzbd:
+  #   image: lscr.io/linuxserver/sabnzbd:latest
+  #   container_name: sabnzbd
+  #   environment:
+  #     - 'PUID=${PUID}'
+  #     - 'PGID=${PGID}'
+  #     - 'TZ=${TZ}'
+  #   volumes:
+  #     - '${ROOT}/config/sabnzbd:/config'
+  #     # - '${HDDSTORAGE3}:/downloads'
+  #     # - '${HDDSTORAGE3}:/incomplete-downloads'
+  #   ports:
+  #     - 32416:8080
+  #   restart: unless-stopped
 
   portainer:
      image: portainer/portainer-ce:latest
