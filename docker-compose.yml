@@ -218,7 +218,19 @@ services:
       - '${HDDSTORAGE3}:/torrents'
     ports:
       - '32407:6767'
-
+  huntarr:
+    image: huntarr/huntarr:latest
+    container_name: huntarr
+    restart: always
+    ports:
+      - "32416:9705"
+    volumes:
+      - '${ROOT}/config/huntarr/cache:/config'
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+      
   overseerr:
     image: 'sctx/overseerr:latest'
     container_name: overseerr
@@ -241,15 +253,3 @@ services:
 volumes:
     data:
 
-huntarr:
-    image: huntarr/huntarr:latest
-    container_name: huntarr
-    restart: always
-    ports:
-      - "32416:9705"
-    volumes:
-      - '${ROOT}/config/huntarr/cache:/config'
-    environment:
-      - 'PUID=${PUID}'
-      - 'PGID=${PGID}'
-      - 'TZ=${TZ}'
