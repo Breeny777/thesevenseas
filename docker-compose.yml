@@ -240,7 +240,7 @@ services:
       - ALLOW_DIRECT_VNC=true
       - LC_ALL=en_US.UTF-8 # force UTF8
       - LANG=en_US.UTF-8   # force UTF8
-      - PASSWORD=<password>
+      - PASSWORD=
     volumes:
       - '${ROOT}/config/tinymediamanager:/data'
       - '${HDDSTORAGE1}:/media1'
