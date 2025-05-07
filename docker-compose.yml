@@ -262,6 +262,7 @@ services:
     restart: unless-stopped 
   portainer:
      image: portainer/portainer-ce:latest
+     container_name: portainer-ce
      ports:
        - 32415:9443
      volumes:
