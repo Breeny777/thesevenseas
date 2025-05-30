@@ -102,6 +102,7 @@ services:
     container_name: tdarr
     image: ghcr.io/haveagitgat/tdarr:latest
     restart: unless-stopped
+    privileged: true
     ports:
       - 32411:8265 # webUI port
       - 8266:8266 # server port
