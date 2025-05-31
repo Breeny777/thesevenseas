@@ -282,11 +282,11 @@ services:
       - TEST_ALERT=YES
     #- ALLOC_FIXES=YES #Optional - Install ALLOC FIXES
     volumes:
-      - '${ROOT}/config/7dtd:/serverfiles:/home/sdtdserver/serverfiles/' #Optional, serverfiles
-      - '${ROOT}/config/7dtd:/7daystodie:/home/sdtdserver/.local/share/7DaysToDie/' #Optional, maps files
-      - '${ROOT}/config/7dtd:/log:/home/sdtdserver/log/' #Optional, logs
-      - '${ROOT}/config/7dtd:/backups:/home/sdtdserver/lgsm/backup/' #Optional, backups
-      - '${ROOT}/config/7dtd:/lgsm-config:/home/sdtdserver/lgsm/config-lgsm/sdtdserver' # Optional, alerts
+      - '${ROOT}/config/7dtd:/home/sdtdserver/serverfiles/' #Optional, serverfiles
+      - '${ROOT}/config/7dtd:/home/sdtdserver/.local/share/7DaysToDie/' #Optional, maps files
+      - '${ROOT}/config/7dtd:/home/sdtdserver/log/' #Optional, logs
+      - '${ROOT}/config/7dtd:/home/sdtdserver/lgsm/backup/' #Optional, backups
+      - '${ROOT}/config/7dtd:/home/sdtdserver/lgsm/config-lgsm/sdtdserver' # Optional, alerts
     ports:
       - 26900:26900/tcp
       - 26900:26900/udp
@@ -300,6 +300,17 @@ services:
       driver: "json-file"
       options:
         max-size: "1m"
+  mumble-server:
+    image: mumblevoip/mumble-server:<tag>
+    container_name: mumble-server
+    hostname: mumble-server
+    restart: on-failure
+    ports:
+      - 64738:64738
+      - 64738:64738/udp
+#   expose:
+#     - 6502         
 volumes:
     data:
 
+ 
