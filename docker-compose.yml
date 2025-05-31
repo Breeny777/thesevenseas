@@ -292,9 +292,9 @@ services:
       - 26900:26900/udp
       - 26901:26901/udp
       - 26902:26902/udp
-      - 8080:8080/tcp
-      - 8081:8081/tcp
-      - 8082:8082/tcp
+      - 8087:8080/tcp
+      - 8088:8081/tcp
+      - 8089:8082/tcp
     restart: unless-stopped #NEVER USE WITH START_MODE=4 or START_MODE=0
     logging:
       driver: "json-file"
