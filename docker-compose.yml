@@ -301,7 +301,7 @@ services:
       options:
         max-size: "1m"
   mumble-server:
-    image: mumblevoip/mumble-server:<tag>
+    image: mumblevoip/mumble-server:latest
     container_name: mumble-server
     hostname: mumble-server
     restart: on-failure
