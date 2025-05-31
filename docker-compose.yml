@@ -270,6 +270,37 @@ services:
   #        - data:/data
   #        - /var/run/docker.sock:/var/run/docker.sock
   #    restart: unless-stopped
+
+    7dtdserver:
+      image: vinanrra/7dtd-server
+      container_name: 7days-gameserver
+      environment:
+        - START_MODE=1
+        - VERSION=stable
+        - PUID=1000 # your uid of your user
+        - PGID=1000 # your gid of your user's group
+        - 'TZ=${TZ}'
+        - TEST_ALERT=YES
+      #- ALLOC_FIXES=YES #Optional - Install ALLOC FIXES
+      volumes:
+        - '${ROOT}/config/7dtd:/serverfiles:/home/sdtdserver/serverfiles/' #Optional, serverfiles
+        - '${ROOT}/config/7dtd:/7daystodie:/home/sdtdserver/.local/share/7DaysToDie/' #Optional, maps files
+        - '${ROOT}/config/7dtd:/log:/home/sdtdserver/log/' #Optional, logs
+        - '${ROOT}/config/7dtd:/backups:/home/sdtdserver/lgsm/backup/' #Optional, backups
+        - '${ROOT}/config/7dtd:/lgsm-config:/home/sdtdserver/lgsm/config-lgsm/sdtdserver' # Optional, alerts
+      ports:
+        - 26900:26900/tcp
+        - 26900:26900/udp
+        - 26901:26901/udp
+        - 26902:26902/udp
+        - 8080:8080/tcp
+        - 8081:8081/tcp
+        - 8082:8082/tcp
+      restart: unless-stopped #NEVER USE WITH START_MODE=4 or START_MODE=0
+      logging:
+        driver: "json-file"
+        options:
+          max-size: "1m"
 volumes:
     data:
 
