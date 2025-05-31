@@ -280,7 +280,7 @@ services:
       - PGID=1000 # your gid of your user's group
       - 'TZ=${TZ}'
       - TEST_ALERT=YES
-    #- ALLOC_FIXES=YES #Optional - Install ALLOC FIXES
+      - ALLOC_FIXES=YES #Optional - Install ALLOC FIXES
     volumes:
       - '${ROOT}/config/7dtd:/home/sdtdserver/serverfiles/' #Optional, serverfiles
       - '${ROOT}/config/7dtd:/home/sdtdserver/.local/share/7DaysToDie/' #Optional, maps files
