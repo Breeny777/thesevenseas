@@ -272,7 +272,7 @@ services:
   #    restart: unless-stopped
   7dtdserver:
     image: vinanrra/7dtd-server
-    container_name: 7days-gameserver
+    container_name: 7dtdserver
     environment:
       - START_MODE=1
       - VERSION=stable
@@ -295,6 +295,36 @@ services:
       - 8087:8080/tcp
       - 8088:8081/tcp
       - 8089:8082/tcp
+    restart: unless-stopped #NEVER USE WITH START_MODE=4 or START_MODE=0
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+  7dtdserver2:
+    image: vinanrra/7dtd-server
+    container_name: 7dtdserver2
+    environment:
+      - START_MODE=1
+      - VERSION=stable
+      - PUID=1000 # your uid of your user
+      - PGID=1000 # your gid of your user's group
+      - 'TZ=${TZ}'
+      - TEST_ALERT=YES
+      - ALLOC_FIXES=YES #Optional - Install ALLOC FIXES
+    volumes:
+      - '${ROOT}/config/7dtd2:/home/sdtdserver/serverfiles/' #Optional, serverfiles
+      - '${ROOT}/config/7dtd2:/home/sdtdserver/.local/share/7DaysToDie/' #Optional, maps files
+      - '${ROOT}/config/7dtd2:/home/sdtdserver/log/' #Optional, logs
+      - '${ROOT}/config/7dtd2:/home/sdtdserver/lgsm/backup/' #Optional, backups
+      - '${ROOT}/config/7dtd2:/home/sdtdserver/lgsm/config-lgsm/sdtdserver' # Optional, alerts
+    ports:
+      - 26920:26920/tcp
+      - 26920:26920/udp
+      - 26921:26921/udp
+      - 26922:26922/udp
+      - 8092:8080/tcp
+      - 8093:8081/tcp
+      - 8094:8082/tcp
     restart: unless-stopped #NEVER USE WITH START_MODE=4 or START_MODE=0
     logging:
       driver: "json-file"
