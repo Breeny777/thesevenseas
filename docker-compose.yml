@@ -250,18 +250,18 @@ services:
   #     - 5900:5900 # VNC port
   #     - 32417:4000 # Webinterface
   #   restart: unless-stopped    
-  # overseerr:
-  #   image: 'sctx/overseerr:latest'
-  #   container_name: overseerr
-  #   environment:
-  #     - LOG_LEVEL=debug
-  #     - 'TZ=${TZ}'
-  #   ports:
-  #     - '32408:5055'
-  #   volumes:
-  #     - '${ROOT}/config/overseerr/config:/app/config'
-  #   restart: unless-stopped 
-  # portainer:
+  overseerr:
+    image: 'sctx/overseerr:latest'
+    container_name: overseerr
+    environment:
+      - LOG_LEVEL=debug
+      - 'TZ=${TZ}'
+    ports:
+      - '32408:5055'
+    volumes:
+      - '${ROOT}/config/overseerr/config:/app/config'
+    restart: unless-stopped 
+  portainer:
   #    image: portainer/portainer-ce:latest
   #    container_name: portainer-ce
   #    ports:
