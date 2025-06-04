@@ -1,4 +1,5 @@
 services:
+  # ---- TV Shows ----
   sonarr:
     container_name: sonarr
     image: 'linuxserver/sonarr:latest'
@@ -15,6 +16,8 @@ services:
       - '${HDDSTORAGE3}:/torrents'
     ports:
       - "32402:8989"
+
+  # ---- Movies ----    
   radarr:
     container_name: radarr
     image: 'linuxserver/radarr:latest'
@@ -30,7 +33,9 @@ services:
       - '${HDDSTORAGE2}:/media2'
       - '${HDDSTORAGE3}:/torrents'  
     ports:
-      - "32403:7878"  
+      - "32403:7878"
+
+  # ---- Books ----    
   readarr:
     container_name: readarr
     image:  linuxserver/readarr:develop
@@ -46,6 +51,8 @@ services:
       - '${HDDSTORAGE3}:/torrents'
     ports:
       - "32404:8787"
+
+  # ---- Music ----    
   lidarr:
     container_name: lidarr
     image: linuxserver/lidarr:develop
@@ -60,7 +67,9 @@ services:
       - '${HDDSTORAGE2}:/media2'
       - '${HDDSTORAGE3}:/torrents'  
     ports:
-      - "32405:8686" 
+      - "32405:8686"
+
+  # ---- Indexer (Torrents) ----     
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
@@ -72,8 +81,7 @@ services:
       - '${ROOT}/config/prowlarr:/config'
     restart: unless-stopped
     ports:
-      - '32406:9696'
-
+      - "32406:9696"
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
@@ -85,6 +93,8 @@ services:
     ports:
       - "${PORT:-32409}:8191"
     restart: unless-stopped
+
+  # ---- Download client (Torrents) ----
   deluge:
     container_name: deluge
     image: 'linuxserver/deluge:latest'
@@ -97,7 +107,9 @@ services:
       - '${ROOT}/config/deluge:/config'
       - '${HDDSTORAGE3}:/torrents'
     ports:
-      - '32410:8112'
+      - "32410:8112"
+
+  # ---- file compression utility ----   
   tdarr:
     container_name: tdarr
     image: ghcr.io/haveagitgat/tdarr:latest
@@ -136,7 +148,7 @@ services:
         # devices:
         # - driver: nvidia
         # count: all
-        # capabilities: [gpu]
+        # capabilities: [gpu]   
   tdarr-node:
     container_name: tdarr_node
     image: ghcr.io/haveagitgat/tdarr_node:latest
@@ -170,8 +182,9 @@ services:
           devices:
             - driver: nvidia
               count: all
-              capabilities: [gpu,video]           
- 
+              capabilities: [gpu,video]        
+
+  # ---- Kindle book library manager ----
   calibre:
     image: lscr.io/linuxserver/calibre:latest
     container_name: calibre
@@ -190,6 +203,7 @@ services:
       - 8081:8081
 
 # Optional containers
+  # ---- Plex user management ----
   # tautulli:
   #   image: ghcr.io/tautulli/tautulli
   #   container_name: tautulli
@@ -202,7 +216,8 @@ services:
   #     - 'PGID=${PGID}'
   #   ports:
   #     - 32412:8181
-
+  
+  # ---- Subtitle manager ----
   # bazarr:
   #   container_name: bazarr
   #   image: 'linuxserver/bazarr:latest'
@@ -219,6 +234,8 @@ services:
   #     - '${HDDSTORAGE3}:/torrents'
   #   ports:
   #     - '32407:6767'
+
+  # ---- Lost TV episode utility ----
   huntarr:
     image: huntarr/huntarr:latest
     container_name: huntarr
@@ -231,6 +248,8 @@ services:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
       - 'TZ=${TZ}'
+
+  # ---- Media renamer and metadate finder -----   
   # tinymediamanager:
   #   image: tinymediamanager/tinymediamanager:latest
   #   container_name: tinymediamanager
@@ -249,7 +268,9 @@ services:
   #   ports:
   #     - 5900:5900 # VNC port
   #     - 32417:4000 # Webinterface
-  #   restart: unless-stopped    
+  #   restart: unless-stopped
+
+  # ---- integrated multi media search tool ----
   overseerr:
     image: 'sctx/overseerr:latest'
     container_name: overseerr
@@ -260,7 +281,9 @@ services:
       - '32408:5055'
     volumes:
       - '${ROOT}/config/overseerr/config:/app/config'
-    restart: unless-stopped 
+    restart: unless-stopped
+
+  # ---- Container manager GUI ---- 
   # portainer:
   #    image: portainer/portainer-ce:latest
   #    container_name: portainer-ce
@@ -270,6 +293,8 @@ services:
   #        - data:/data
   #        - /var/run/docker.sock:/var/run/docker.sock
   #    restart: unless-stopped
+
+  # ---- 7Days to die servers + Mumble voip server ----
   7dtdserver:
     image: vinanrra/7dtd-server
     container_name: 7dtdserver
