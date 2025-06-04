@@ -261,7 +261,7 @@ services:
     volumes:
       - '${ROOT}/config/overseerr/config:/app/config'
     restart: unless-stopped 
-  portainer:
+  # portainer:
   #    image: portainer/portainer-ce:latest
   #    container_name: portainer-ce
   #    ports:
