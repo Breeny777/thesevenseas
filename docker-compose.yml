@@ -396,6 +396,7 @@ services:
     volumes:
       - /:/mnt/host:ro
     environment:
+      DASHDOT_ENABLE_CPU_TEMPS: 'true'   
       DASHDOT_WIDGET_LIST: 'os,cpu,storage,ram,network,gpu'
 
 volumes:
