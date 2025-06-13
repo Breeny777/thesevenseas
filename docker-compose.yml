@@ -364,7 +364,22 @@ services:
       - 64738:64738
       - 64738:64738/udp
 #   expose:
-#     - 6502         
+#     - 6502
+
+homarr:
+    container_name: homarr
+    image: ghcr.io/homarr-labs/homarr:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - '${ROOT}/config/homarr:/appdata'
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+      - SECRET_ENCRYPTION_KEY=7d0fc795f5ddf8ab10d51c20009ff8110b1a5923f644f43f3eb01e4fe672f320
+    ports:
+      - '32418:7575'
 volumes:
     data:
 
