@@ -373,8 +373,8 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
         - '${ROOT}/config/homarr:/appdata'
       environment:
-        - 'PUID=${PUID}'
-        - 'PGID=${PGID}'
+        # - 'PUID=${PUID}'
+        # - 'PGID=${PGID}'
         - 'TZ=${TZ}'
         - SECRET_ENCRYPTION_KEY=7d0fc795f5ddf8ab10d51c20009ff8110b1a5923f644f43f3eb01e4fe672f320
       ports:
