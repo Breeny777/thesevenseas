@@ -382,13 +382,21 @@ services:
       ports:
         - '32418:7575'
   dash:
-    image: mauricenino/dashdot:latest
+    image: mauricenino/dashdot:nvidia
     restart: unless-stopped
     privileged: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities:
+                - gpu
     ports:
       - '3001:3001'
     volumes:
       - /:/mnt/host:ro
+    environment:
+      DASHDOT_WIDGET_LIST: 'os,cpu,storage,ram,network,gpu'
 
 volumes:
     data:
