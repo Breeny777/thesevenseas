@@ -204,18 +204,18 @@ services:
 
 # Optional containers
   # ---- Plex user management ----
-  # tautulli:
-  #   image: ghcr.io/tautulli/tautulli
-  #   container_name: tautulli
-  #   restart: unless-stopped
-  #   volumes:
-  #     - '${ROOT}/config/tautulli:/config'
-  #   environment:
-  #     - 'TZ=${TZ}'
-  #     - 'PUID=${PUID}'
-  #     - 'PGID=${PGID}'
-  #   ports:
-  #     - 32412:8181
+  tautulli:
+    image: ghcr.io/tautulli/tautulli
+    container_name: tautulli
+    restart: unless-stopped
+    volumes:
+      - '${ROOT}/config/tautulli:/config'
+    environment:
+      - 'TZ=${TZ}'
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+    ports:
+      - 32412:8181
   
   # ---- Subtitle manager ----
   # bazarr:
