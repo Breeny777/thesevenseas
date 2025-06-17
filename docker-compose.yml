@@ -250,25 +250,25 @@ services:
       - 'TZ=${TZ}'
 
   # ---- Media renamer and metadate finder -----   
-  # tinymediamanager:
-  #   image: tinymediamanager/tinymediamanager:latest
-  #   container_name: tinymediamanager
-  #   environment:
-  #     - 'PUID=${PUID}'
-  #     - 'PGID=${PGID}'
-  #     - 'TZ=${TZ}'
-  #     - ALLOW_DIRECT_VNC=true
-  #     - LC_ALL=en_US.UTF-8 # force UTF8
-  #     - LANG=en_US.UTF-8   # force UTF8
-  #     - PASSWORD=
-  #   volumes:
-  #     - '${ROOT}/config/tinymediamanager:/data'
-  #     - '${HDDSTORAGE1}:/media1'
-  #     - '${HDDSTORAGE2}:/media2'
-  #   ports:
-  #     - 5900:5900 # VNC port
-  #     - 32417:4000 # Webinterface
-  #   restart: unless-stopped
+  tinymediamanager:
+    image: tinymediamanager/tinymediamanager:latest
+    container_name: tinymediamanager
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+      - ALLOW_DIRECT_VNC=true
+      - LC_ALL=en_US.UTF-8 # force UTF8
+      - LANG=en_US.UTF-8   # force UTF8
+      - PASSWORD=
+    volumes:
+      - '${ROOT}/config/tinymediamanager:/data'
+      - '${HDDSTORAGE1}:/media1'
+      - '${HDDSTORAGE2}:/media2'
+    ports:
+      - 5900:5900 # VNC port
+      - 32417:4000 # Webinterface
+    restart: unless-stopped
 
   # ---- integrated multi media search tool ----
   overseerr:
