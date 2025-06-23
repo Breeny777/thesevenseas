@@ -109,6 +109,30 @@ services:
     ports:
       - "32410:8112"
 
+  # utorrent:
+  #   image: ekho/utorrent:<tag>
+  #   volumes:
+  #     - utorrent-settings:/utorrent/settings
+  #     - /path/to/data/dir:/data
+  #     - /path/to/data/dir2:/abs-path-dir
+  #   environment:
+  #     - 'PUID=${PUID}'
+  #     - 'PGID=${PGID}'
+  #     - 'TZ=${TZ}'
+  #     - webui: ng
+  #     - dir_autoload_delete: true
+  #     - dir_download: subdir1,/abs-path-dir
+  #   ports:
+  #     - 8080:8080
+  #     - 6881:6881
+  #     - 6881:6881/udp
+  #   restart: always
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+
   # ---- file compression utility ----   
   tdarr:
     container_name: tdarr
@@ -288,6 +312,8 @@ services:
   #    image: portainer/portainer-ce:latest
   #    container_name: portainer-ce
   #    ports:
+
+  
   #      - 32415:9443
   #    volumes:
   #        - data:/data
