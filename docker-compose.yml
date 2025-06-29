@@ -55,7 +55,8 @@ services:
   # ---- Music ----    
   lidarr:
     container_name: lidarr
-    image: linuxserver/lidarr:develop
+    # image: linuxserver/lidarr:develop
+    image: blampe/lidarr:lidarr-plugins-2.13.0.4661
     restart: unless-stopped
     environment:
       - 'PUID=${PUID}'
