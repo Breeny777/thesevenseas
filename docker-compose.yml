@@ -18,7 +18,7 @@ services:
       - '${HDDSTORAGE1}:/media1'
       - '${HDDSTORAGE2}:/media2'
       - '${HDDSTORAGE3}:/media3'
-      - '${hddstorage4}:/torrents'
+      - '${HDDSTORAGE4}:/torrents'
     ports:
       - "32402:8989"
 
@@ -37,7 +37,7 @@ services:
       - '${HDDSTORAGE1}:/media1'
       - '${HDDSTORAGE2}:/media2'
       - '${HDDSTORAGE3}:/media3'
-      - '${hddstorage4}:/torrents'  
+      - '${HDDSTORAGE4}:/torrents'  
     ports:
       - "32403:7878"
 
@@ -54,7 +54,7 @@ services:
       - '/etc/localtime:/etc/localtime:ro'
       - '${ROOT}/config/readdarr:/config'
       - '${HDDSTORAGE2}:/media2'
-      - '${hddstorage4}:/torrents'
+      - '${HDDSTORAGE4}:/torrents'
     ports:
       - "32404:8787"
 
@@ -72,7 +72,7 @@ services:
       - '/etc/localtime:/etc/localtime:ro'
       - '${ROOT}/config/lidarr:/config'
       - '${HDDSTORAGE2}:/media2'
-      - '${hddstorage4}:/torrents'  
+      - '${HDDSTORAGE4}:/torrents'  
     ports:
       - "32405:8686"
 
@@ -112,7 +112,7 @@ services:
       - 'TZ=${TZ}'
     volumes:
       - '${ROOT}/config/deluge:/config'
-      - '${hddstorage4}:/torrents'
+      - '${HDDSTORAGE4}:/torrents'
     ports:
       - "32410:8112"
 
@@ -284,7 +284,7 @@ services:
   #     - '${HDDSTORAGE1}:/media1'
   #     - '${HDDSTORAGE2}:/media2'
   #     - '${HDDSTORAGE3}:/media3'
-  #     - '${hddstorage4}:/torrents'
+  #     - '${HDDSTORAGE4}:/torrents'
   #   ports:
   #     - '32407:6767'
 
