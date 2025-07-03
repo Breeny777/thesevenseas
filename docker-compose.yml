@@ -44,7 +44,7 @@ services:
   # ---- Books ----    
   readarr:
     container_name: readarr
-    image: blampe/rreading-glasses:latest
+    image:  linuxserver/readarr:develop
     restart: unless-stopped
     environment:
       - 'PUID=${PUID}'
@@ -54,7 +54,7 @@ services:
       - '/etc/localtime:/etc/localtime:ro'
       - '${ROOT}/config/readdarr:/config'
       - '${HDDSTORAGE2}:/media2'
-      # - '${HDDSTORAGE4}:/torrents'
+      - '${HDDSTORAGE4}:/torrents'
     ports:
       - "32404:8787"
 
