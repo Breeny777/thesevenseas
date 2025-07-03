@@ -1,3 +1,7 @@
+# TheSevenSeas ARR stack :):):)
+# vars from .env file which should reside in same folder as this file
+# Comment out sections as required to stop containers being run
+
 services:
   # ---- TV Shows ----
   sonarr:
@@ -13,7 +17,8 @@ services:
       - '${ROOT}/config/sonarr:/config'
       - '${HDDSTORAGE1}:/media1'
       - '${HDDSTORAGE2}:/media2'
-      - '${HDDSTORAGE3}:/torrents'
+      - '${HDDSTORAGE3}:/media3'
+      - '${hddstorage4}:/torrents'
     ports:
       - "32402:8989"
 
@@ -31,7 +36,8 @@ services:
       - '${ROOT}/config/radarr:/config'
       - '${HDDSTORAGE1}:/media1'
       - '${HDDSTORAGE2}:/media2'
-      - '${HDDSTORAGE3}:/torrents'  
+      - '${HDDSTORAGE3}:/media3'
+      - '${hddstorage4}:/torrents'  
     ports:
       - "32403:7878"
 
@@ -48,7 +54,7 @@ services:
       - '/etc/localtime:/etc/localtime:ro'
       - '${ROOT}/config/readdarr:/config'
       - '${HDDSTORAGE2}:/media2'
-      - '${HDDSTORAGE3}:/torrents'
+      - '${hddstorage4}:/torrents'
     ports:
       - "32404:8787"
 
@@ -66,7 +72,7 @@ services:
       - '/etc/localtime:/etc/localtime:ro'
       - '${ROOT}/config/lidarr:/config'
       - '${HDDSTORAGE2}:/media2'
-      - '${HDDSTORAGE3}:/torrents'  
+      - '${hddstorage4}:/torrents'  
     ports:
       - "32405:8686"
 
@@ -106,7 +112,7 @@ services:
       - 'TZ=${TZ}'
     volumes:
       - '${ROOT}/config/deluge:/config'
-      - '${HDDSTORAGE3}:/torrents'
+      - '${hddstorage4}:/torrents'
     ports:
       - "32410:8112"
 
@@ -164,6 +170,7 @@ services:
       - '${ROOT}/config/tdarr/cache:/temp'
       - '${HDDSTORAGE1}:/media1'
       - '${HDDSTORAGE2}:/media2'
+      - '${HDDSTORAGE3}:/media3'
 
     devices:
       - /dev/dri:/dev/dri
@@ -198,6 +205,7 @@ services:
       - '${ROOT}/config/tdarr/cache:/temp'
       - '${HDDSTORAGE1}:/media1'
       - '${HDDSTORAGE2}:/media2'
+      - '${HDDSTORAGE3}:/media3'
 
     devices:
       - /dev/dri:/dev/dri
@@ -275,7 +283,8 @@ services:
   #     - '${ROOT}/config/bazarr:/config'
   #     - '${HDDSTORAGE1}:/media1'
   #     - '${HDDSTORAGE2}:/media2'
-  #     - '${HDDSTORAGE3}:/torrents'
+  #     - '${HDDSTORAGE3}:/media3'
+  #     - '${hddstorage4}:/torrents'
   #   ports:
   #     - '32407:6767'
 
@@ -309,6 +318,7 @@ services:
       - '${ROOT}/config/tinymediamanager:/data'
       - '${HDDSTORAGE1}:/media1'
       - '${HDDSTORAGE2}:/media2'
+      - '${HDDSTORAGE3}:/media3'
     ports:
       - 5900:5900 # VNC port
       - 32417:4000 # Webinterface
