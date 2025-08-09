@@ -460,12 +460,6 @@ services:
       DASHDOT_WIDGET_LIST: 'os,cpu,storage,ram,network,gpu'
       NVIDIA_DISABLE_REQUIRE: 'true'
 
-  webmin:
-    image: pschatzmann/webmin
-    container_name: webmin
-    ports:
-       - 10000:10000
-        
 volumes:
     data:
 
