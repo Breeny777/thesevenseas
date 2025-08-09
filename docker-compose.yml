@@ -351,12 +351,14 @@ services:
   #    restart: unless-stopped
 
   # ---- 7Days to die servers + Mumble voip server ----
+
+  #running version 1.4
   7dtdserver:
     image: vinanrra/7dtd-server
     container_name: 7dtdserver
     environment:
       - START_MODE=1
-      - VERSION=stable
+      - VERSION=v1.4
       - PUID=1000 # your uid of your user
       - PGID=1000 # your gid of your user's group
       - 'TZ=${TZ}'
@@ -381,6 +383,7 @@ services:
       driver: "json-file"
       options:
         max-size: "1m"
+# Running latest version
   7dtdserver2:
     image: vinanrra/7dtd-server
     container_name: 7dtdserver2
