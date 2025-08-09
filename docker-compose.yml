@@ -42,21 +42,21 @@ services:
       - "32403:7878"
 
   # ---- Books ----    
-  # readarr:
-  #   container_name: readarr
-  #   image:  linuxserver/readarr:develop
-  #   restart: unless-stopped
-  #   environment:
-  #     - 'PUID=${PUID}'
-  #     - 'PGID=${PGID}'
-  #     - 'TZ=${TZ}'
-  #   volumes:
-  #     - '/etc/localtime:/etc/localtime:ro'
-  #     - '${ROOT}/config/readdarr:/config'
-  #     - '${HDDSTORAGE2}:/media2'
-  #     - '${HDDSTORAGE4}:/torrents'
-  #   ports:
-  #     - "32404:8787"
+  readarr:
+    container_name: readarr
+    image:  linuxserver/readarr:develop
+    restart: unless-stopped
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - '${ROOT}/config/readdarr:/config'
+      - '${HDDSTORAGE2}:/media2'
+      - '${HDDSTORAGE4}:/torrents'
+    ports:
+      - "32404:8787"
 
   # ---- Music ----    
   lidarr:
