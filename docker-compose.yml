@@ -459,22 +459,22 @@ services:
       DASHDOT_ALWAYS_SHOW_PERCENTAGES: 'true'  
       DASHDOT_WIDGET_LIST: 'os,cpu,storage,ram,network,gpu'
 
-  # webmin:
-  #   image: trucv/webmin:latest  # Or another suitable Webmin image, e.g., coderitter/webmin
-  #   container_name: webmin
-  #   restart: unless-stopped
-  #   ports:
-  #     - "10000:10000"  # Map host port 10000 to container port 10000 (Webmin's default)
-  #   environment:
-  #     # Optional: Set a custom root password for Webmin. If not set, default might be "password"
-  #     - ROOT_PASSWORD=Password1
-  #     - 'PUID=${PUID}'
-  #     - 'PGID=${PGID}'
-  #     - 'TZ=${TZ}'
-  #   volumes:
-  #     # Optional: Persist Webmin configuration and data
-  #      - '${ROOT}/config/webmin:/etc/webmin'
-  #      - '${ROOT}/config/webmin:/var/log/webmin'
+  webmin:
+    image: trucv/webmin:latest  # Or another suitable Webmin image, e.g., coderitter/webmin
+    container_name: webmin
+    restart: unless-stopped
+    ports:
+      - "10000:10000"  # Map host port 10000 to container port 10000 (Webmin's default)
+    environment:
+      # Optional: Set a custom root password for Webmin. If not set, default might be "password"
+      - ROOT_PASSWORD=Password1
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      # Optional: Persist Webmin configuration and data
+       - '${ROOT}/config/webmin:/etc/webmin'
+       - '${ROOT}/config/webmin:/var/log/webmin'
 volumes:
     data:
 
