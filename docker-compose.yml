@@ -140,6 +140,23 @@ services:
   #       max-size: "10m"
   #       max-file: "3"
 
+  qbittorrent:
+    image: linuxserver/qbittorrent
+    container_name: qbittorrent
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+      - WEBUI_PORT=8080 # Port for the qBittorrent web UI
+    volumes:
+      - '${ROOT}/qbit/config:/config'
+      - '${HDDSTORAGE4}:/downloads'
+    ports:
+      - 32419:8080 # Web UI access
+      - 6881:6881 # Peer-to-peer connections (TCP)
+      - 6881:6881/udp # Peer-to-peer connections (UDP)
+    restart: unless-stopped
+
   # ---- file compression utility ----   
   tdarr:
     container_name: tdarr
@@ -336,19 +353,6 @@ services:
     volumes:
       - '${ROOT}/config/overseerr/config:/app/config'
     restart: unless-stopped
-
-  # ---- Container manager GUI ---- 
-  # portainer:
-  #    image: portainer/portainer-ce:latest
-  #    container_name: portainer-ce
-  #    ports:
-
-  
-  #      - 32415:9443
-  #    volumes:
-  #        - data:/data
-  #        - /var/run/docker.sock:/var/run/docker.sock
-  #    restart: unless-stopped
 
   # ---- 7Days to die servers + Mumble voip server ----
 
