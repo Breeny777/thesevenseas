@@ -149,7 +149,7 @@ services:
       - 'TZ=${TZ}'
       - WEBUI_PORT=8080 # Port for the qBittorrent web UI
     volumes:
-      - '${ROOT}/qbit/config:/config'
+      - '${ROOT}/config/qbit:/config'
       - '${HDDSTORAGE4}:/downloads'
     ports:
       - 32419:8080 # Web UI access
