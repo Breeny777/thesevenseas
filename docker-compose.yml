@@ -102,19 +102,19 @@ services:
     restart: unless-stopped
 
   # ---- Download client (Torrents) ----
-  deluge:
-    container_name: deluge
-    image: 'linuxserver/deluge:latest'
-    restart: unless-stopped
-    environment:
-      - 'PUID=${PUID}'
-      - 'PGID=${PGID}'
-      - 'TZ=${TZ}'
-    volumes:
-      - '${ROOT}/config/deluge:/config'
-      - '${HDDSTORAGE4}:/torrents'
-    ports:
-      - "32410:8112"
+  # deluge:
+  #   container_name: deluge
+  #   image: 'linuxserver/deluge:latest'
+  #   restart: unless-stopped
+  #   environment:
+  #     - 'PUID=${PUID}'
+  #     - 'PGID=${PGID}'
+  #     - 'TZ=${TZ}'
+  #   volumes:
+  #     - '${ROOT}/config/deluge:/config'
+  #     - '${HDDSTORAGE4}:/torrents'
+  #   ports:
+  #     - "32410:8112"
 
   # utorrent:
   #   image: ekho/utorrent:<tag>
