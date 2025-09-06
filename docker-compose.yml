@@ -42,21 +42,21 @@ services:
       - "32403:7878"
 
   # ---- Books ----    
-  readarr:
-    container_name: readarr
-    image:  linuxserver/readarr:develop
-    restart: unless-stopped
-    environment:
-      - 'PUID=${PUID}'
-      - 'PGID=${PGID}'
-      - 'TZ=${TZ}'
-    volumes:
-      - '/etc/localtime:/etc/localtime:ro'
-      - '${ROOT}/config/readdarr:/config'
-      - '${HDDSTORAGE2}:/media2'
-      - '${HDDSTORAGE4}:/torrents'
-    ports:
-      - "32404:8787"
+  # readarr:
+  #   container_name: readarr
+  #   image:  linuxserver/readarr:develop
+  #   restart: unless-stopped
+  #   environment:
+  #     - 'PUID=${PUID}'
+  #     - 'PGID=${PGID}'
+  #     - 'TZ=${TZ}'
+  #   volumes:
+  #     - '/etc/localtime:/etc/localtime:ro'
+  #     - '${ROOT}/config/readdarr:/config'
+  #     - '${HDDSTORAGE2}:/media2'
+  #     - '${HDDSTORAGE4}:/torrents'
+  #   ports:
+  #     - "32404:8787"
 
   # ---- Music ----    
   lidarr:
@@ -101,45 +101,7 @@ services:
       - "${PORT:-32409}:8191"
     restart: unless-stopped
 
-  # ---- Download client (Torrents) ----
-  # deluge:
-  #   container_name: deluge
-  #   image: 'linuxserver/deluge:latest'
-  #   restart: unless-stopped
-  #   environment:
-  #     - 'PUID=${PUID}'
-  #     - 'PGID=${PGID}'
-  #     - 'TZ=${TZ}'
-  #   volumes:
-  #     - '${ROOT}/config/deluge:/config'
-  #     - '${HDDSTORAGE4}:/torrents'
-  #   ports:
-  #     - "32410:8112"
-
-  # utorrent:
-  #   image: ekho/utorrent:<tag>
-  #   volumes:
-  #     - utorrent-settings:/utorrent/settings
-  #     - /path/to/data/dir:/data
-  #     - /path/to/data/dir2:/abs-path-dir
-  #   environment:
-  #     - 'PUID=${PUID}'
-  #     - 'PGID=${PGID}'
-  #     - 'TZ=${TZ}'
-  #     - webui: ng
-  #     - dir_autoload_delete: true
-  #     - dir_download: subdir1,/abs-path-dir
-  #   ports:
-  #     - 8080:8080
-  #     - 6881:6881
-  #     - 6881:6881/udp
-  #   restart: always
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "10m"
-  #       max-file: "3"
-
+  # ---- Download Client (Torrents) ----
   qbittorrent:
     image: linuxserver/qbittorrent
     container_name: qbittorrent
@@ -191,13 +153,6 @@ services:
 
     devices:
       - /dev/dri:/dev/dri
-        # deploy:
-        # resources:
-        # reservations:
-        # devices:
-        # - driver: nvidia
-        # count: all
-        # capabilities: [gpu]   
   tdarr-node:
     container_name: tdarr_node
     image: ghcr.io/haveagitgat/tdarr_node:latest
@@ -234,23 +189,6 @@ services:
               count: all
               capabilities: [gpu,video]        
 
-  # ---- Kindle book library manager ----
-  # calibre:
-  #   image: lscr.io/linuxserver/calibre:latest
-  #   container_name: calibre
-  #   restart: unless-stopped
-  #   environment:
-  #     - 'TZ=${TZ}'
-  #     - 'PUID=${PUID}'
-  #     - 'PGID=${PGID}'
-  #     - PASSWORD= 
-  #   volumes:
-  #     - '${ROOT}/config/calibre:/config'
-  #     - '${HDDSTORAGE2}:/media2'
-  #   ports:
-  #     - 32413:8080
-  #     - 8181:8181
-  #     - 8081:8081
   calibre-web-automated:
     image: crocodilestick/calibre-web-automated:latest
     container_name: calibre-web-automated
@@ -286,26 +224,6 @@ services:
     ports:
       - 32412:8181
   
-  # ---- Subtitle manager ----
-  # bazarr:
-  #   container_name: bazarr
-  #   image: 'linuxserver/bazarr:latest'
-  #   restart: unless-stopped
-  #   environment:
-  #     - 'PUID=${PUID}'
-  #     - 'PGID=${PGID}'
-  #     - 'TZ=${TZ}'
-  #     - UMASK_SET=022
-  #   volumes:
-  #     - '${ROOT}/config/bazarr:/config'
-  #     - '${HDDSTORAGE1}:/media1'
-  #     - '${HDDSTORAGE2}:/media2'
-  #     - '${HDDSTORAGE3}:/media3'
-  #     - '${HDDSTORAGE4}:/torrents'
-  #   ports:
-  #     - '32407:6767'
-
-  # ---- Lost TV episode utility ----
   huntarr:
     image: huntarr/huntarr:latest
     container_name: huntarr
@@ -426,8 +344,6 @@ services:
     ports:
       - 64738:64738
       - 64738:64738/udp
-#   expose:
-#     - 6502
 
 # ---- Dashboard services ----
   homarr:
