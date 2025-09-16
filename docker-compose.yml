@@ -3,6 +3,37 @@
 # Comment out sections as required to stop containers being run
 
 services:
+  
+  # ---- Media Server ----
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+      - VERSION=docker
+      # - PLEX_CLAIM= #optional
+      - NVIDIA_VISIBLE_DEVICES=all
+    runtime: nvidia
+    volumes:
+      # - /path/to/plex/library:/config
+      # - /path/to/tvseries:/tv
+      # - /path/to/movies:/movies
+      - '${ROOT}/config/plex:/config'
+      - '${HDDSTORAGE1}:/tv1'
+      - '${HDDSTORAGE2}:/tv2'
+      - '${HDDSTORAGE3}:/tv3'
+      - '${HDDSTORAGE1}:/movies1'
+      - '${HDDSTORAGE2}:/movies2'
+      - '${HDDSTORAGE3}:/movies3'
+      - '${HDDSTORAGE1}:/docos'
+      - '${HDDSTORAGE2}:/kidsmovies'
+      - '${HDDSTORAGE2}:/docos'
+      - '${HDDSTORAGE2}:/music'
+    restart: unless-stopped
+  
   # ---- TV Shows ----
   sonarr:
     container_name: sonarr
