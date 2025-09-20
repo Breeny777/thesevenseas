@@ -410,6 +410,19 @@ services:
       DASHDOT_ALWAYS_SHOW_PERCENTAGES: 'true'  
       DASHDOT_WIDGET_LIST: 'os,cpu,storage,ram,network,gpu'
       NVIDIA_DISABLE_REQUIRE: 'true'
+  
+  cosmos-server:
+    container_name: cosmos-server
+    image: azukaar/cosmos-server:latest
+    restart: unless-stopped
+    volumes:
+      - '${ROOT}/config/cosmos-server:/config'
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    ports:
+      - '443:443'
 
 volumes:
     data:
