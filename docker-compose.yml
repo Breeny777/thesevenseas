@@ -303,79 +303,6 @@ services:
       - '${ROOT}/config/overseerr/config:/app/config'
     restart: unless-stopped
 
-  # ---- 7Days to die servers + Mumble voip server ----
-
-  #running version 1.4
-  7dtdserver:
-    image: vinanrra/7dtd-server
-    container_name: 7dtdserver
-    environment:
-      - START_MODE=1
-      - VERSION=v1.4
-      - PUID=1000 # your uid of your user
-      - PGID=1000 # your gid of your user's group
-      - 'TZ=${TZ}'
-      - TEST_ALERT=YES
-      - ALLOC_FIXES=YES #Optional - Install ALLOC FIXES
-    volumes:
-      - '${ROOT}/config/7dtd:/home/sdtdserver/serverfiles/' #Optional, serverfiles
-      - '${ROOT}/config/7dtd:/home/sdtdserver/.local/share/7DaysToDie/' #Optional, maps files
-      - '${ROOT}/config/7dtd:/home/sdtdserver/log/' #Optional, logs
-      - '${ROOT}/config/7dtd:/home/sdtdserver/lgsm/backup/' #Optional, backups
-      - '${ROOT}/config/7dtd:/home/sdtdserver/lgsm/config-lgsm/sdtdserver' # Optional, alerts
-    ports:
-      - 26900:26900/tcp
-      - 26900:26900/udp
-      - 26901:26901/udp
-      - 26902:26902/udp
-      - 8087:8080/tcp
-      - 8088:8081/tcp
-      - 8089:8082/tcp
-    restart: unless-stopped #NEVER USE WITH START_MODE=4 or START_MODE=0
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-# Running latest version
-  7dtdserver2:
-    image: vinanrra/7dtd-server
-    container_name: 7dtdserver2
-    environment:
-      - START_MODE=1
-      - VERSION=stable
-      - PUID=1000 # your uid of your user
-      - PGID=1000 # your gid of your user's group
-      - 'TZ=${TZ}'
-      - TEST_ALERT=YES
-      - ALLOC_FIXES=YES #Optional - Install ALLOC FIXES
-    volumes:
-      - '${ROOT}/config/7dtd2:/home/sdtdserver/serverfiles/' #Optional, serverfiles
-      - '${ROOT}/config/7dtd2:/home/sdtdserver/.local/share/7DaysToDie/' #Optional, maps files
-      - '${ROOT}/config/7dtd2:/home/sdtdserver/log/' #Optional, logs
-      - '${ROOT}/config/7dtd2:/home/sdtdserver/lgsm/backup/' #Optional, backups
-      - '${ROOT}/config/7dtd2:/home/sdtdserver/lgsm/config-lgsm/sdtdserver' # Optional, alerts
-    ports:
-      - 26920:26920/tcp
-      - 26920:26920/udp
-      - 26921:26921/udp
-      - 26922:26922/udp
-      - 8092:8080/tcp
-      - 8093:8081/tcp
-      - 8094:8082/tcp
-    restart: unless-stopped #NEVER USE WITH START_MODE=4 or START_MODE=0
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "1m"
-  mumble-server:
-    image: mumblevoip/mumble-server:latest
-    container_name: mumble-server
-    hostname: mumble-server
-    restart: on-failure
-    ports:
-      - 64738:64738
-      - 64738:64738/udp
-
 # ---- Dashboard services ----
   homarr:
       container_name: homarr
@@ -411,19 +338,6 @@ services:
       DASHDOT_WIDGET_LIST: 'os,cpu,storage,ram,network,gpu'
       NVIDIA_DISABLE_REQUIRE: 'true'
   
-  cosmos-server:
-    container_name: cosmos-server
-    image: azukaar/cosmos-server:latest
-    restart: unless-stopped
-    volumes:
-      - '${ROOT}/config/cosmos-server:/config'
-    environment:
-      - 'PUID=${PUID}'
-      - 'PGID=${PGID}'
-      - 'TZ=${TZ}'
-    ports:
-      - '443:443'
-
 volumes:
     data:
 
