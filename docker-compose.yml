@@ -75,7 +75,7 @@ services:
   # ---- Books ----    
   readarr:
     container_name: readarr
-    image:  linuxserver/readarr:develop
+    image:  lscr.io/linuxserver/readarr:develop
     restart: unless-stopped
     environment:
       - 'PUID=${PUID}'
