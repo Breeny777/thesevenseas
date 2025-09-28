@@ -316,7 +316,7 @@ services:
         # - 'PGID=${PGID}'
         - 'TZ=${TZ}'
         - SECRET_ENCRYPTION_KEY=7d0fc795f5ddf8ab10d51c20009ff8110b1a5923f644f43f3eb01e4fe672f320
-        - DOCKER_HOSTNAMES=localhost,tcp://192.168.4.16:2375
+        - DOCKER_HOSTNAMES=localhost,tcp://192.168.4.5:2375
         - DOCKER_PORTS=2375,2375
       ports:
         - '32418:7575'
