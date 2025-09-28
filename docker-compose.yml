@@ -308,6 +308,7 @@ services:
       container_name: homarr
       image: ghcr.io/homarr-labs/homarr:latest
       restart: unless-stopped
+      network_mode: host
       volumes:
         # - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
         - '${ROOT}/config/homarr:/appdata'
