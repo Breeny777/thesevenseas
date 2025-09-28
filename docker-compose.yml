@@ -75,7 +75,7 @@ services:
   # ---- Books ----    
   readarr:
     container_name: readarr
-    image:  lscr.io/linuxserver/readarr:develop
+    image:  ghcr.io/pennydreadful/bookshelf:hardcover-v0.4.20.91
     restart: unless-stopped
     environment:
       - 'PUID=${PUID}'
