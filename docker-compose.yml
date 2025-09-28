@@ -309,7 +309,7 @@ services:
       image: ghcr.io/homarr-labs/homarr:latest
       restart: unless-stopped
       volumes:
-        - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+        # - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
         - '${ROOT}/config/homarr:/appdata'
       environment:
         # - 'PUID=${PUID}'
