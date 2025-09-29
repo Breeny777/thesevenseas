@@ -8,6 +8,8 @@ services:
   plex:
     image: lscr.io/linuxserver/plex:latest
     container_name: plex
+    labels:
+      - host=${HOST_ID}
     network_mode: host
     environment:
       - 'PUID=${PUID}'
@@ -37,6 +39,8 @@ services:
   # ---- TV Shows ----
   sonarr:
     container_name: sonarr
+    labels:
+      - host=${HOST_ID}
     image: 'linuxserver/sonarr:latest'
     restart: unless-stopped
     environment:
@@ -56,6 +60,8 @@ services:
   # ---- Movies ----    
   radarr:
     container_name: radarr
+    labels:
+      - host=${HOST_ID}
     image: 'linuxserver/radarr:latest'
     restart: unless-stopped
     environment:
@@ -75,6 +81,8 @@ services:
   # ---- Books ----    
   readarr:
     container_name: readarr
+    labels:
+      - host=${HOST_ID}
     image:  ghcr.io/pennydreadful/bookshelf:hardcover-v0.4.20.91
     restart: unless-stopped
     environment:
@@ -92,6 +100,8 @@ services:
   # ---- Music ----    
   lidarr:
     container_name: lidarr
+    labels:
+      - host=${HOST_ID}
     # image: linuxserver/lidarr:develop
     image: blampe/lidarr:latest
     restart: unless-stopped
@@ -111,6 +121,8 @@ services:
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
+    labels:
+      - host=${HOST_ID}
     environment:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
@@ -123,6 +135,8 @@ services:
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
+    labels:
+      - host=${HOST_ID}
     environment:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - LOG_HTML=${LOG_HTML:-false}
@@ -136,6 +150,8 @@ services:
   qbittorrent:
     image: linuxserver/qbittorrent
     container_name: qbittorrent
+    labels:
+      - host=${HOST_ID}
     environment:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
@@ -154,6 +170,8 @@ services:
   tdarr:
     container_name: tdarr
     image: ghcr.io/haveagitgat/tdarr:latest
+    labels:
+      - host=${HOST_ID}
     restart: unless-stopped
     privileged: true
     ports:
@@ -187,6 +205,8 @@ services:
   tdarr-node:
     container_name: tdarr_node
     image: ghcr.io/haveagitgat/tdarr_node:latest
+    labels:
+      - host=${HOST_ID}
     restart: unless-stopped
     network_mode: service:tdarr
     environment:
@@ -223,6 +243,8 @@ services:
   calibre-web-automated:
     image: crocodilestick/calibre-web-automated:latest
     container_name: calibre-web-automated
+    labels:
+      - host=${HOST_ID}
     environment:
       # Only change these if you know what you're doing
       - 'TZ=${TZ}'
@@ -245,6 +267,8 @@ services:
   tautulli:
     image: ghcr.io/tautulli/tautulli
     container_name: tautulli
+    labels:
+      - host=${HOST_ID}
     restart: unless-stopped
     volumes:
       - '${ROOT}/config/tautulli:/config'
@@ -258,6 +282,8 @@ services:
   huntarr:
     image: huntarr/huntarr:latest
     container_name: huntarr
+    labels:
+      - host=${HOST_ID}
     restart: always
     ports:
       - "32416:9705"
@@ -272,6 +298,8 @@ services:
   tinymediamanager:
     image: tinymediamanager/tinymediamanager:latest
     container_name: tinymediamanager
+    labels:
+      - host=${HOST_ID}
     environment:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
@@ -294,6 +322,8 @@ services:
   overseerr:
     image: 'sctx/overseerr:latest'
     container_name: overseerr
+    labels:
+      - host=${HOST_ID}
     environment:
       - LOG_LEVEL=debug
       - 'TZ=${TZ}'
@@ -307,6 +337,8 @@ services:
   homarr:
       container_name: homarr
       image: ghcr.io/homarr-labs/homarr:latest
+      labels:
+      - host=${HOST_ID}
       restart: unless-stopped
       # network_mode: host
       volumes:
@@ -323,6 +355,8 @@ services:
         - '32418:7575'
   dash:
     image: mauricenino/dashdot:nvidia
+    labels:
+      - host=${HOST_ID}
     restart: unless-stopped
     privileged: true
     deploy:
@@ -344,6 +378,8 @@ services:
   docker-socket-proxy:
       image: tecnativa/docker-socket-proxy
       container_name: docker-socket-proxy
+      labels:
+      - host=${HOST_ID}
       ports:
         - "2375:2375"
       volumes:
