@@ -216,8 +216,25 @@ services:
           devices:
             - driver: nvidia
               count: all
-              capabilities: [gpu,video]        
-
+              capabilities: [gpu,video]
+# ---- Calibre for ebook management ----
+  calibre:
+    image: lscr.io/linuxserver/calibre:latest
+    container_name: calibre
+    restart: unless-stopped
+    environment:
+      - 'TZ=${TZ}'
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - PASSWORD= 
+    volumes:
+      - '${ROOT}/config/calibre:/config'
+      - '${HDDSTORAGE2}:/media2'
+    ports:
+      - 32413:8080
+      - 8181:8181
+      - 8081:8081
+  # ---- Calibre web for book management ----
   calibre-web-automated:
     image: crocodilestick/calibre-web-automated:latest
     container_name: PlexHost-Calibre-Web-Automated
