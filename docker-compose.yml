@@ -216,7 +216,7 @@ services:
 # ---- Calibre for ebook management ----
   calibre:
     image: lscr.io/linuxserver/calibre:latest
-    container_name: calibre
+    container_name: PlexHost-Calibre
     restart: unless-stopped
     environment:
       - 'TZ=${TZ}'
