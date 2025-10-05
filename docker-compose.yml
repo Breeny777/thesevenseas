@@ -152,7 +152,7 @@ services:
     restart: unless-stopped
     privileged: true
     ports:
-      - 32411:8265 # webUI port
+      - 32421:8265 # webUI port
       - 8266:8266 # server port
     environment:
       - 'TZ=${TZ}'
@@ -227,7 +227,7 @@ services:
       - '${ROOT}/config/calibre:/config'
       - '${HDDSTORAGE2}:/media2'
     ports:
-      - 32413:8080
+      - 32423:8080
       - 8181:8181
       - 8081:8081
 
@@ -333,7 +333,7 @@ services:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
     ports:
-      - 32412:8181
+      - 32422:8181
   
   huntarr:
     image: huntarr/huntarr:latest
@@ -367,7 +367,7 @@ services:
       - '${HDDSTORAGE3}:/media3'
     ports:
       - 5900:5900 # VNC port
-      - 32417:4000 # Webinterface
+      - 32427:4000 # Webinterface
     restart: unless-stopped
 
   # ---- integrated multi media search tool ----
