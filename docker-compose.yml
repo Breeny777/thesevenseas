@@ -253,7 +253,23 @@ services:
     ports:
       # Change the first number to change the port you want to access the Web UI, not the second
       - 8083:8083 
-    restart: unless-stopped    
+    restart: unless-stopped
+  # ---- Cloudflare Tunnels ----
+  tunnel1-books:
+    image: cloudflare/cloudflared:latest
+    container_name: CFT-books
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token eyJhIjoiMTc0NzM1NDIyNjNmZmQ0OTlmYzcwNmRhNDViNjcyY2UiLCJ0IjoiZWRmYmJkNjYtMWI5Mi00MjU4LTgyMjgtMGQyNmQxN2M2NzdhIiwicyI6IlpqQTBObVkzTW1JdFlXWTRZaTAwTWpSakxXRTFPVFl0WVRGaE1qSmpaV0ppT0dSayJ9
+  tunnel2-overseerr:
+    image: cloudflare/cloudflared:latest
+    container_name: CFT-overseerr
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token eyJhIjoiMTc0NzM1NDIyNjNmZmQ0OTlmYzcwNmRhNDViNjcyY2UiLCJ0IjoiM2QwYmZjODYtNGVmNC00OTdlLThjNDMtZTFiMThjYTZmNTliIiwicyI6Ik56YzJPV05rTnpRdFpETTRPQzAwWlRjeExUZzNORGN0T0dVeU16Z3pabVUzTmpnNCJ9
+  tunnel3-dashboard:
+    image: cloudflare/cloudflared:latest
+    container_name: CFT-dashboard
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token eyJhIjoiMTc0NzM1NDIyNjNmZmQ0OTlmYzcwNmRhNDViNjcyY2UiLCJ0IjoiNjBhNjQzMDUtZjE5My00YzgzLWExMDEtYmVhOWRlYzAxYjU4IiwicyI6Ik5EQTJNVEUxT0dRdE9Ua3lZeTAwWlRaaExXSm1OakV0TWpFNE1XRmpNek00WlRKaCJ9
 
 # Optional containers
   # ---- Plex user management ----
