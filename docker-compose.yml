@@ -13,13 +13,9 @@ services:
       - 'PGID=${PGID}'
       - 'TZ=${TZ}'
       - VERSION=docker
-      # - PLEX_CLAIM= #optional
       - NVIDIA_VISIBLE_DEVICES=all
     runtime: nvidia
     volumes:
-      # - /path/to/plex/library:/config
-      # - /path/to/tvseries:/tv
-      # - /path/to/movies:/movies
       - '${ROOT}/config/plex:/config'
       - '${HDDSTORAGE1}:/tv1'
       - '${HDDSTORAGE2}:/tv2'
@@ -91,7 +87,6 @@ services:
   # ---- Music ----    
   lidarr:
     container_name: PlexHost-Lidarr
-    
     # image: linuxserver/lidarr:develop
     image: blampe/lidarr:latest
     restart: unless-stopped
@@ -217,6 +212,7 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu,video]
+
 # ---- Calibre for ebook management ----
   calibre:
     image: lscr.io/linuxserver/calibre:latest
@@ -234,40 +230,93 @@ services:
       - 32413:8080
       - 8181:8181
       - 8081:8081
+
   # ---- Calibre web for book management ----
   calibre-web-automated:
     image: crocodilestick/calibre-web-automated:latest
     container_name: PlexHost-Calibre-Web-Automated
     environment:
-      # Only change these if you know what you're doing
       - 'TZ=${TZ}'
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
     volumes:
-      # CW users migrating should stop their existing CW instance, make a copy of the config folder, and bind that here to carry over all of their user settings ect.
       - '${ROOT}/config/cwa:/config'
       # This is an ingest dir, NOT a library one. Anything added here will be automatically added to your library according to the settings you have configured in CWA Settings page. All files placed here are REMOVED AFTER PROCESSING
       - '${HDDSTORAGE2}/Books:/cwa-book-ingest'
-      # If you don't have an existing library, CWA will automatically create one at the bind provided here
       - '${HDDSTORAGE2}/Calibre-Library:/calibre-library'
     ports:
-      # Change the first number to change the port you want to access the Web UI, not the second
       - 8083:8083 
     restart: unless-stopped
+
+  # ---- Dashboard services ----
+  homarr:
+      container_name: PlexHost-Homarr
+      image: ghcr.io/homarr-labs/homarr:latest
+      restart: unless-stopped
+      volumes:
+        # - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+        - '${ROOT}/config/homarr:/appdata'
+      environment:
+        # - 'PUID=${PUID}'
+        # - 'PGID=${PGID}'
+        - 'TZ=${TZ}'
+        - SECRET_ENCRYPTION_KEY=7d0fc795f5ddf8ab10d51c20009ff8110b1a5923f644f43f3eb01e4fe672f320
+        - DOCKER_HOSTNAMES=192.168.4.5,192.168.4.16
+        - DOCKER_PORTS=2375,2375
+      ports:
+        - '32418:7575'
+  dash:
+    image: mauricenino/dashdot:nvidia
+    container_name: PlexHost-Dashdot
+    restart: unless-stopped
+    privileged: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities:
+                - gpu
+    ports:
+      - '3001:3001'
+    volumes:
+      - /:/mnt/host:ro
+    environment:
+      DASHDOT_ENABLE_CPU_TEMPS: 'true'
+      DASHDOT_ALWAYS_SHOW_PERCENTAGES: 'true'  
+      DASHDOT_WIDGET_LIST: 'os,cpu,storage,ram,network,gpu'
+      NVIDIA_DISABLE_REQUIRE: 'true'
+
+  # Container access proxy - DO NOT REMOVE
+  docker-socket-proxy:
+      image: tecnativa/docker-socket-proxy
+      container_name: PlexHost-docker-socket-proxy
+      ports:
+        - "2375:2375"
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+      environment:
+        - CONTAINERS=1
+        - POST=1
+        - DELETE=1
+        - SERVICES=1
+        - NETWORKS=1
+        - LOG_LEVEL=info
+      restart: unless-stopped
+
   # ---- Cloudflare Tunnels ----
   tunnel1-books:
     image: cloudflare/cloudflared:latest
-    container_name: CFT-books
+    container_name: PlexHost-CFT-Books
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token eyJhIjoiMTc0NzM1NDIyNjNmZmQ0OTlmYzcwNmRhNDViNjcyY2UiLCJ0IjoiZWRmYmJkNjYtMWI5Mi00MjU4LTgyMjgtMGQyNmQxN2M2NzdhIiwicyI6IlpqQTBObVkzTW1JdFlXWTRZaTAwTWpSakxXRTFPVFl0WVRGaE1qSmpaV0ppT0dSayJ9
   tunnel2-overseerr:
     image: cloudflare/cloudflared:latest
-    container_name: CFT-overseerr
+    container_name: PlexHost-CFT-Overseerr
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token eyJhIjoiMTc0NzM1NDIyNjNmZmQ0OTlmYzcwNmRhNDViNjcyY2UiLCJ0IjoiM2QwYmZjODYtNGVmNC00OTdlLThjNDMtZTFiMThjYTZmNTliIiwicyI6Ik56YzJPV05rTnpRdFpETTRPQzAwWlRjeExUZzNORGN0T0dVeU16Z3pabVUzTmpnNCJ9
   tunnel3-dashboard:
     image: cloudflare/cloudflared:latest
-    container_name: CFT-dashboard
+    container_name: PlesHost-CFT-Dashboard
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token eyJhIjoiMTc0NzM1NDIyNjNmZmQ0OTlmYzcwNmRhNDViNjcyY2UiLCJ0IjoiNjBhNjQzMDUtZjE5My00YzgzLWExMDEtYmVhOWRlYzAxYjU4IiwicyI6Ik5EQTJNVEUxT0dRdE9Ua3lZeTAwWlRaaExXSm1OakV0TWpFNE1XRmpNek00WlRKaCJ9
 
@@ -333,61 +382,6 @@ services:
     volumes:
       - '${ROOT}/config/overseerr/config:/app/config'
     restart: unless-stopped
-
-# ---- Dashboard services ----
-  homarr:
-      container_name: PlexHost-Homarr
-      image: ghcr.io/homarr-labs/homarr:latest
-      restart: unless-stopped
-      # network_mode: host
-      volumes:
-        # - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
-        - '${ROOT}/config/homarr:/appdata'
-      environment:
-        # - 'PUID=${PUID}'
-        # - 'PGID=${PGID}'
-        - 'TZ=${TZ}'
-        - SECRET_ENCRYPTION_KEY=7d0fc795f5ddf8ab10d51c20009ff8110b1a5923f644f43f3eb01e4fe672f320
-        - DOCKER_HOSTNAMES=192.168.4.5,192.168.4.16
-        - DOCKER_PORTS=2375,2375
-      ports:
-        - '32418:7575'
-  dash:
-    image: mauricenino/dashdot:nvidia
-    container_name: PlexHost-Dashdot
-    restart: unless-stopped
-    privileged: true
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - capabilities:
-                - gpu
-    ports:
-      - '3001:3001'
-    volumes:
-      - /:/mnt/host:ro
-    environment:
-      DASHDOT_ENABLE_CPU_TEMPS: 'true'
-      DASHDOT_ALWAYS_SHOW_PERCENTAGES: 'true'  
-      DASHDOT_WIDGET_LIST: 'os,cpu,storage,ram,network,gpu'
-      NVIDIA_DISABLE_REQUIRE: 'true'
-  # Container access proxy - DO NOT REMOVE
-  docker-socket-proxy:
-      image: tecnativa/docker-socket-proxy
-      container_name: PlexHost-docker-socket-proxy
-      ports:
-        - "2375:2375"
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-      environment:
-        - CONTAINERS=1
-        - POST=1
-        - DELETE=1
-        - SERVICES=1
-        - NETWORKS=1
-        - LOG_LEVEL=info
-      restart: unless-stopped
 
 volumes:
     data:
