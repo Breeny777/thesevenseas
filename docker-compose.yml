@@ -319,6 +319,36 @@ services:
     container_name: PlesHost-CFT-Dashboard
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token eyJhIjoiMTc0NzM1NDIyNjNmZmQ0OTlmYzcwNmRhNDViNjcyY2UiLCJ0IjoiNjBhNjQzMDUtZjE5My00YzgzLWExMDEtYmVhOWRlYzAxYjU4IiwicyI6Ik5EQTJNVEUxT0dRdE9Ua3lZeTAwWlRaaExXSm1OakV0TWpFNE1XRmpNek00WlRKaCJ9
+# ---- OpenVPN ----
+  openvpn:
+    image: kylemanna/openvpn
+    container_name: openvpn
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "1194:1194/udp"
+    volumes:
+      - '${ROOT}/config/ovpn-data:/etc/openvpn'
+    restart: unless-stopped
+    environment:
+      - OVPN_SERVER=udp://122.199.17.3
+# ---- Pi Hole ----
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "32424:80/tcp"
+      - "32425:443/tcp"
+    environment:
+      TZ: ${TZ}
+    volumes:
+      - '${ROOT}/config/pihole:/etc/pihole'
+      - '${ROOT}/config/pihole/dnsmasq:/etc/dnsmasq.d'
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
 
 # Optional containers
   # ---- Plex user management ----
