@@ -343,8 +343,7 @@ services:
       - "32425:443/tcp"
     environment:
       TZ: 'Australia/Adelaide'
-      FTLCONF_webserver_api_password: 'PiHoleAdmin2025'
-      FTLCONF_dns_listeningMode: 'all'
+      WEBPASSWORD: 'PiHoleAdmin2025'
     volumes:
       - '${ROOT}/config/pihole:/etc/pihole'
       - '${ROOT}/config/pihole/dnsmasq:/etc/dnsmasq.d'
