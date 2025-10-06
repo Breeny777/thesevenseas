@@ -343,13 +343,13 @@ services:
       - "32425:443/tcp"
     environment:
       TZ: 'Australia/Adelaide'
-      WEBPASSWORD: 'PiHoleAdmin2025'
     volumes:
       - '${ROOT}/config/pihole:/etc/pihole'
       - '${ROOT}/config/pihole/dnsmasq:/etc/dnsmasq.d'
     # cap_add:
     #   - NET_ADMIN
     restart: unless-stopped
+  # note - run docker exec -it pihole pihole setpassword "" to set/change password
 
 # Optional containers
   # ---- Plex user management ----
