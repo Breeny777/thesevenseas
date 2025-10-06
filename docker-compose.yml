@@ -346,8 +346,8 @@ services:
     volumes:
       - '${ROOT}/config/pihole:/etc/pihole'
       - '${ROOT}/config/pihole/dnsmasq:/etc/dnsmasq.d'
-    cap_add:
-      - NET_ADMIN
+    # cap_add:
+    #   - NET_ADMIN
     restart: unless-stopped
 
 # Optional containers
