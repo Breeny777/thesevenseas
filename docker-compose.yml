@@ -253,6 +253,9 @@ services:
       container_name: PlexHost-Homarr
       image: ghcr.io/homarr-labs/homarr:latest
       restart: unless-stopped
+      sysctls: 
+        - net.ipv6.conf.all.disable_ipv6=1 
+        - net.ipv6.conf.default.disable_ipv6=1
       volumes:
         # - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
         - '${ROOT}/config/homarr:/appdata'
