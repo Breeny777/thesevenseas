@@ -88,7 +88,7 @@ services:
   lidarr:
     container_name: PlexHost-Lidarr
     # image: linuxserver/lidarr:develop
-    image: linuxserver/lidarr:2.2.5.4020-ls256
+    image: linuxserver/lidarr:1.4.5.3530-ls208
     restart: unless-stopped
     environment:
       - 'PUID=${PUID}'
