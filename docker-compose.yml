@@ -5,8 +5,8 @@
 services:
   # ---- Media Server ----
   plex:
-    image: lscr.io/linuxserver/plex:latest
-    container_name: PlexHost-Plex  
+    container_name: plex
+    image: lscr.io/linuxserver/plex:latest  
     network_mode: host
     environment:
       - 'PUID=${PUID}'
@@ -31,7 +31,7 @@ services:
   
   # ---- TV Shows ----
   sonarr:
-    container_name: PlexHost-Sonarr
+    container_name: sonarr
     image: 'linuxserver/sonarr:latest'
     restart: unless-stopped
     environment:
@@ -50,7 +50,7 @@ services:
 
   # ---- Movies ----    
   radarr:
-    container_name: PlexHost-Radarr
+    container_name: radarr
     image: 'linuxserver/radarr:latest'
     restart: unless-stopped
     environment:
@@ -69,7 +69,7 @@ services:
 
   # ---- Books ----    
   readarr:
-    container_name: PlexHost-Readarr
+    container_name: readarr
     image:  ghcr.io/pennydreadful/bookshelf:hardcover-v0.4.20.91
     restart: unless-stopped
     environment:
@@ -86,8 +86,7 @@ services:
 
   # ---- Music ----    
   lidarr:
-    container_name: PlexHost-Lidarr
-    # image: linuxserver/lidarr:develop
+    container_name: lidarr
     image: blampe/lidarr:latest
     restart: unless-stopped
     environment:
@@ -101,11 +100,25 @@ services:
       - '${HDDSTORAGE4}:/torrents'  
     ports:
       - "32405:8686"
+  headphones:
+    container_name: headphones
+    image: lscr.io/linuxserver/headphones:latest
+    restart: unless-stopped
+    environment:
+      - 'PUID=${PUID}'
+      - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+    volumes:
+      - '${ROOT}/config/headphones:/config'
+      - '${HDDSTORAGE5}:/downloads'  
+      - '${HDDSTORAGE6}:/music'
+    ports:
+      - "32407:8181"    
 
   # ---- Indexer (Torrents) ----     
   prowlarr:
+    container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:latest
-    container_name: PlexHost-Prowlarr
     environment:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
@@ -116,8 +129,8 @@ services:
     ports:
       - "32406:9696"
   flaresolverr:
+    container_name: flaresolverr
     image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: PlexHost-Flaresolverr
     environment:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - LOG_HTML=${LOG_HTML:-false}
@@ -129,8 +142,8 @@ services:
 
   # ---- Download Client (Torrents) ----
   qbittorrent:
+    container_name: qbittorrent
     image: linuxserver/qbittorrent
-    container_name: PlexHost-Qbittorrent
     environment:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
@@ -147,7 +160,7 @@ services:
 
   # ---- file compression utility ----   
   tdarr:
-    container_name: PlexHost-Tdarr
+    container_name: tdarr
     image: ghcr.io/haveagitgat/tdarr:latest
     restart: unless-stopped
     privileged: true
@@ -180,7 +193,7 @@ services:
     devices:
       - /dev/dri:/dev/dri
   tdarr-node:
-    container_name: PlexHost-Tdarr_node
+    container_name: tdarr_node
     image: ghcr.io/haveagitgat/tdarr_node:latest
     restart: unless-stopped
     network_mode: service:tdarr
@@ -215,8 +228,8 @@ services:
 
 # ---- Calibre for ebook management ----
   calibre:
+    container_name: calibre
     image: lscr.io/linuxserver/calibre:latest
-    container_name: PlexHost-Calibre
     restart: unless-stopped
     environment:
       - 'TZ=${TZ}'
@@ -233,8 +246,8 @@ services:
 
   # ---- Calibre web for book management ----
   calibre-web-automated:
+    container_name: calibre-web-automated
     image: crocodilestick/calibre-web-automated:latest
-    container_name: PlexHost-Calibre-Web-Automated
     environment:
       - 'TZ=${TZ}'
       - 'PUID=${PUID}'
@@ -250,7 +263,7 @@ services:
 
   # ---- Dashboard services ----
   homarr:
-      container_name: PlexHost-Homarr
+      container_name: homarr
       image: ghcr.io/homarr-labs/homarr:latest
       restart: unless-stopped
       sysctls: 
@@ -269,8 +282,8 @@ services:
       ports:
         - '32418:7575'
   dash:
+    container_name: dash
     image: mauricenino/dashdot:nvidia
-    container_name: PlexHost-Dashdot
     restart: unless-stopped
     privileged: true
     deploy:
@@ -291,8 +304,8 @@ services:
 
   # Container access proxy - DO NOT REMOVE
   docker-socket-proxy:
+      container_name: docker-socket-proxy
       image: tecnativa/docker-socket-proxy
-      container_name: PlexHost-docker-socket-proxy
       ports:
         - "2375:2375"
       volumes:
@@ -308,26 +321,26 @@ services:
 
   # ---- Cloudflare Tunnels ----
   tunnel1-books:
+    container_name: cft-books
     image: cloudflare/cloudflared:latest
-    container_name: PlexHost-CFT-Books
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token eyJhIjoiMTc0NzM1NDIyNjNmZmQ0OTlmYzcwNmRhNDViNjcyY2UiLCJ0IjoiZWRmYmJkNjYtMWI5Mi00MjU4LTgyMjgtMGQyNmQxN2M2NzdhIiwicyI6IlpqQTBObVkzTW1JdFlXWTRZaTAwTWpSakxXRTFPVFl0WVRGaE1qSmpaV0ppT0dSayJ9
   tunnel2-overseerr:
+    container_name: cft-overseerr
     image: cloudflare/cloudflared:latest
-    container_name: PlexHost-CFT-Overseerr
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token eyJhIjoiMTc0NzM1NDIyNjNmZmQ0OTlmYzcwNmRhNDViNjcyY2UiLCJ0IjoiM2QwYmZjODYtNGVmNC00OTdlLThjNDMtZTFiMThjYTZmNTliIiwicyI6Ik56YzJPV05rTnpRdFpETTRPQzAwWlRjeExUZzNORGN0T0dVeU16Z3pabVUzTmpnNCJ9
   tunnel3-dashboard:
+    container_name: cft-dashboard
     image: cloudflare/cloudflared:latest
-    container_name: PlexHost-CFT-Dashboard
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token eyJhIjoiMTc0NzM1NDIyNjNmZmQ0OTlmYzcwNmRhNDViNjcyY2UiLCJ0IjoiNjBhNjQzMDUtZjE5My00YzgzLWExMDEtYmVhOWRlYzAxYjU4IiwicyI6Ik5EQTJNVEUxT0dRdE9Ua3lZeTAwWlRaaExXSm1OakV0TWpFNE1XRmpNek00WlRKaCJ9
 
 # Optional containers
   # ---- Plex user management ----
   tautulli:
+    container_name: tautulli
     image: ghcr.io/tautulli/tautulli
-    container_name: PlexHost-Tautulli
     restart: unless-stopped
     volumes:
       - '${ROOT}/config/tautulli:/config'
@@ -339,8 +352,8 @@ services:
       - 32422:8181
   
   huntarr:
+    container_name: huntarr
     image: huntarr/huntarr:latest
-    container_name: PlexHost-Huntarr
     restart: always
     ports:
       - "32416:9705"
@@ -353,8 +366,8 @@ services:
 
   # ---- Media renamer and metadate finder -----   
   tinymediamanager:
-    image: tinymediamanager/tinymediamanager:latest
-    container_name: PlexHost-TinyMediaManager
+    container_name: tinymediamanager
+    image: tinymediamanager/tinymediamanager:latest 
     environment:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
@@ -375,8 +388,8 @@ services:
 
   # ---- integrated multi media search tool ----
   overseerr:
+    container_name: overseerr
     image: 'sctx/overseerr:latest'
-    container_name: PlexHost-Overseerr
     environment:
       - LOG_LEVEL=debug
       - 'TZ=${TZ}'
