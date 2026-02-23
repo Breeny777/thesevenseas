@@ -351,18 +351,18 @@ services:
     ports:
       - 32422:8181
   
-  huntarr:
-    container_name: huntarr
-    image: huntarr/huntarr:latest
-    restart: always
-    ports:
-      - "32416:9705"
-    volumes:
-      - '${ROOT}/config/huntarr/cache:/config'
-    environment:
-      - 'PUID=${PUID}'
-      - 'PGID=${PGID}'
-      - 'TZ=${TZ}'
+  # huntarr:
+  #   container_name: huntarr
+  #   image: huntarr/huntarr:latest
+  #   restart: always
+  #   ports:
+  #     - "32416:9705"
+  #   volumes:
+  #     - '${ROOT}/config/huntarr/cache:/config'
+  #   environment:
+  #     - 'PUID=${PUID}'
+  #     - 'PGID=${PGID}'
+  #     - 'TZ=${TZ}'
 
   # ---- Media renamer and metadate finder -----   
   tinymediamanager:
