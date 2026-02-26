@@ -85,21 +85,21 @@ services:
       - "32404:8787"
 
   # ---- Music ----    
-  lidarr:
-    container_name: lidarr
-    image: lscr.io/linuxserver/lidarr:latest
-    restart: unless-stopped
-    environment:
-      - 'PUID=${PUID}'
-      - 'PGID=${PGID}'
-      - 'TZ=${TZ}'
-    volumes:
-      - '/etc/localtime:/etc/localtime:ro'
-      - '${ROOT}/config/lidarr:/config'
-      - '${HDDSTORAGE2}:/media2'
-      - '${HDDSTORAGE4}:/torrents'  
-    ports:
-      - "32405:8686"
+  # lidarr:
+  #   container_name: lidarr
+  #   image: lscr.io/linuxserver/lidarr:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     - 'PUID=${PUID}'
+  #     - 'PGID=${PGID}'
+  #     - 'TZ=${TZ}'
+  #   volumes:
+  #     - '/etc/localtime:/etc/localtime:ro'
+  #     - '${ROOT}/config/lidarr:/config'
+  #     - '${HDDSTORAGE2}:/media2'
+  #     - '${HDDSTORAGE4}:/torrents'  
+  #   ports:
+  #     - "32405:8686"
   headphones:
     container_name: headphones
     image: lscr.io/linuxserver/headphones:latest
