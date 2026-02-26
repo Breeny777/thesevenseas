@@ -87,7 +87,7 @@ services:
   # ---- Music ----    
   lidarr:
     container_name: lidarr
-    image: blampe/lidarr:latest
+    image: lscr.io/linuxserver/lidarr:latest
     restart: unless-stopped
     environment:
       - 'PUID=${PUID}'
