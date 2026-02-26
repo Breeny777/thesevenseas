@@ -100,20 +100,20 @@ services:
       - '${HDDSTORAGE4}:/torrents'  
     ports:
       - "32405:8686"
-  headphones:
-    container_name: headphones
-    image: lscr.io/linuxserver/headphones:latest
-    restart: unless-stopped
-    environment:
-      - 'PUID=${PUID}'
-      - 'PGID=${PGID}'
-      - 'TZ=${TZ}'
-    volumes:
-      - '${ROOT}/config/headphones:/config'
-      - '${HDDSTORAGE5}:/downloads'  
-      - '${HDDSTORAGE6}:/music'
-    ports:
-      - "32407:8181"    
+  # headphones:
+  #   container_name: headphones
+  #   image: lscr.io/linuxserver/headphones:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     - 'PUID=${PUID}'
+  #     - 'PGID=${PGID}'
+  #     - 'TZ=${TZ}'
+  #   volumes:
+  #     - '${ROOT}/config/headphones:/config'
+  #     - '${HDDSTORAGE5}:/downloads'  
+  #     - '${HDDSTORAGE6}:/music'
+  #   ports:
+  #     - "32407:8181"    
 
   # ---- Indexer (Torrents) ----     
   prowlarr:
