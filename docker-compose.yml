@@ -113,7 +113,7 @@ services:
         - PLEX_APP_ID=eXf+f9ktw3CZ8i45OY468WxriOCtoFxuNPzVeDcAwfw=
         - SPOTIFY_API_CLIENT_ID=c7b81c4687a44ec7a664437aca3d0b8f
         - SPOTIFY_API_CLIENT_SECRET=799ff32ed7de4c45ab64a588eda4962b
-        - SPOTIFY_API_REDIRECT_URI=https://jjdenhertog.github.io/spotify-to-plex/callback.html
+        - SPOTIFY_API_REDIRECT_URI=https://192.168.4.5:9030/api/spotify/token
         - ENCRYPTION_KEY=ae3c5f7e590aeab79371aed2ff0f4f6056b36937d04676ac830066836b918b80
         # Lidarr Integration
         - LIDARR_URL=http://192.168.4.5:32405 # Update with your Lidarr IP
