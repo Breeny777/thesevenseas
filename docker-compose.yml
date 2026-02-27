@@ -106,6 +106,7 @@ services:
       container_name: spotify-to-plex
       ports:
         - "8888:8888" # Critical for the first-time Spotify login "callback"
+        - "9030:9030" # Optional, for the web UI
       environment:
         - PLEX_URL=http://192.168.4.5:32400
         - PLEX_TOKEN=N4uQMmC-SrGdyGcsSQEE
