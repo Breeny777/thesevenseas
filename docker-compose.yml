@@ -100,43 +100,22 @@ services:
       - '${HDDSTORAGE4}:/torrents'  
     ports:
       - "32405:8686"
-    # headphones:
-    #   container_name: headphones
-    #   image: lscr.io/linuxserver/headphones:latest
-    #   restart: unless-stopped
-    #   environment:
-    #     - 'PUID=${PUID}'
-    #     - 'PGID=${PGID}'
-    #     - 'TZ=${TZ}'
-    #   volumes:
-    #     - '${ROOT}/config/headphones:/config'
-    #     - '${HDDSTORAGE5}:/downloads'  
-    #     - '${HDDSTORAGE6}:/music'
-    #   ports:
-    #     - "32407:8181"    
 
-  playlistSync:
-    image: rnagabhyrava/plexplaylistsync:latest
-    container_name: playlistSync
-    # optional only if you chose WRITE_MISSING_AS_CSV=1 in env
-    volumes:
-      - '${HDDSTORAGE6}:/music'
-    environment:
-      - PLEX_URL=http://192.168.4.5:32400
-      - PLEX_TOKEN=N4uQMmC-SrGdyGcsSQEE
-      - WRITE_MISSING_AS_CSV=1 # Default 0, 1 = writes missing tracks from each playlist to a csv
-      - APPEND_SERVICE_SUFFIX=1 # Default 1, 1 = appends the service name to the playlist name
-      - ADD_PLAYLIST_POSTER=1 # Default 1, 1 = add poster for each playlist
-      - ADD_PLAYLIST_DESCRIPTION=1 # Default 1, 1 = add description for each playlist
-      - APPEND_INSTEAD_OF_SYNC=0 # Default 0, 1 = Sync tracks, 0 = Append only
-      - SECONDS_TO_WAIT=84000
-      - SPOTIFY_CLIENT_ID=c7b81c4687a44ec7a664437aca3d0b8f
-      - SPOTIFY_CLIENT_SECRET=799ff32ed7de4c45ab64a588eda4962b
-      - SPOTIFY_USER_ID=12101729390
-      - SPOTIFY_SCOPE=playlist-read-private playlist-read-collaborative
-      # - DEEZER_USER_ID=<your spotify user id>
-      # - DEEZER_PLAYLIST_ID= #<deezer playlist ids space seperated>
-    restart: unless-stopped
+  spotify-to-plex:
+      image: jjdenhertog/spotify-to-plex:latest
+      container_name: spotify-to-plex
+      ports:
+        - "8888:8888" # Critical for the first-time Spotify login "callback"
+      environment:
+        - PLEX_URL=http://192.168.4.5:32400
+        - PLEX_TOKEN=N4uQMmC-SrGdyGcsSQEE
+        - SPOTIFY_CLIENT_ID=c7b81c4687a44ec7a664437aca3d0b8f
+        - SPOTIFY_CLIENT_SECRET=799ff32ed7de4c45ab64a588eda4962b
+        # Lidarr Integration
+        - LIDARR_URL=http://192.168.4.5:32405 # Update with your Lidarr IP
+        - LIDARR_API_KEY=99063e0d5e534bc58aa8fee7690a8734
+        - LIDARR_ROOT_PATH=/media2/Music/ # Must match your Lidarr's root folder
+      restart: unless-stopped
 
   # ---- Indexer (Torrents) ----     
   prowlarr:
