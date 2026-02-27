@@ -133,6 +133,7 @@ services:
       - SPOTIFY_CLIENT_ID=c7b81c4687a44ec7a664437aca3d0b8f
       - SPOTIFY_CLIENT_SECRET=799ff32ed7de4c45ab64a588eda4962b
       - SPOTIFY_USER_ID=12101729390
+      - SPOTIFY_SCOPE=playlist-read-private playlist-read-collaborative
       # - DEEZER_USER_ID=<your spotify user id>
       # - DEEZER_PLAYLIST_ID= #<deezer playlist ids space seperated>
     restart: unless-stopped
