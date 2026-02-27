@@ -112,6 +112,7 @@ services:
         - PLEX_TOKEN=N4uQMmC-SrGdyGcsSQEE
         - SPOTIFY_CLIENT_ID=c7b81c4687a44ec7a664437aca3d0b8f
         - SPOTIFY_CLIENT_SECRET=799ff32ed7de4c45ab64a588eda4962b
+        - SPOTIFY_API_REDIRECT_URI=http://192.168.4.5:8888/callback
         # Lidarr Integration
         - LIDARR_URL=http://192.168.4.5:32405 # Update with your Lidarr IP
         - LIDARR_API_KEY=99063e0d5e534bc58aa8fee7690a8734
