@@ -43,8 +43,8 @@ def add_artist(name):
         "rootFolderPath": ROOT_FOLDER,
         "monitored": True,
         "addOptions": {
-            "monitor": "all",
-            "searchForMissingAlbums": True
+            "monitor": "none",
+            "searchForMissingAlbums": False
         }
     }
 
