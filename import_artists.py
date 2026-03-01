@@ -5,19 +5,31 @@ LIDARR_URL = "http://plexhost:32405"
 API_KEY = "99063e0d5e534bc58aa8fee7690a8734"
 ROOT_FOLDER = "/media2/Music"
 
+# Common separators in Spotify exports
+SEPARATORS = [",", "&", "feat.", "Feat.", "FEAT.", "featuring", ";"]
+
+def split_artists(name):
+    for sep in SEPARATORS:
+        if sep in name:
+            parts = [p.strip() for p in name.split(sep)]
+            return parts
+    return [name]
+
 def add_artist(name):
     print(f"\nSearching for: {name}")
+
     query = urllib.parse.quote(name)
     lookup_url = f"{LIDARR_URL}/api/v1/artist/lookup?term={query}&apikey={API_KEY}"
 
     try:
         results = requests.get(lookup_url).json()
     except Exception as e:
-        print(f"Error contacting Lidarr: {e}")
+        print(f"  ❌ Error contacting Lidarr: {e}")
         return
 
-    if not results:
-        print(f"  ❌ Not found in MusicBrainz: {name}")
+    # Ensure results is a list with at least one entry
+    if not isinstance(results, list) or len(results) == 0:
+        print(f"  ❌ No match found for: {name}")
         return
 
     artist = results[0]
@@ -48,9 +60,24 @@ def add_artist(name):
 
 def main():
     with open("artists.txt", "r", encoding="utf-8") as f:
-        artists = [line.strip() for line in f if line.strip()]
+        raw_artists = [line.strip() for line in f if line.strip()]
 
-    print(f"Found {len(artists)} artists to import.")
+    print(f"Found {len(raw_artists)} raw entries in artists.txt")
+
+    # Expand multi-artist entries
+    expanded = []
+    for entry in raw_artists:
+        expanded.extend(split_artists(entry))
+
+    # Deduplicate while preserving order
+    seen = set()
+    artists = []
+    for a in expanded:
+        if a.lower() not in seen:
+            seen.add(a.lower())
+            artists.append(a)
+
+    print(f"Processing {len(artists)} unique artists...")
 
     for artist in artists:
         add_artist(artist)
