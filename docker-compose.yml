@@ -119,6 +119,8 @@ services:
         - LIDARR_URL=http://192.168.4.5:32405 # Update with your Lidarr IP
         - LIDARR_API_KEY=99063e0d5e534bc58aa8fee7690a8734
         - LIDARR_ROOT_PATH=/media2/Music/ # Must match your Lidarr's root folder
+      volumes:
+        - ${ROOT}/config/spotify-to-plex:/config
       restart: unless-stopped
 
   # ---- Indexer (Torrents) ----     
