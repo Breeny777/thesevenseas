@@ -124,12 +124,23 @@ def get_playlists(access_token):
 
 def choose_playlists(playlists):
     print("\nAvailable Spotify playlists:\n")
+    valid = []
+
     for i, pl in enumerate(playlists, start=1):
-        print(f"{i:3d}. {pl['name']} ({pl['tracks']['total']} tracks)")
+        track_count = pl.get("tracks", {}).get("total")
+        if track_count is None:
+            # Skip playlist folders or malformed playlists
+            continue
+
+        valid.append(pl)
+        print(f"{len(valid):3d}. {pl['name']} ({track_count} tracks)")
+
     print("\nEnter playlist numbers to sync (comma-separated), or 'all':")
     choice = input("> ").strip()
+
     if choice.lower() == "all":
-        return playlists
+        return valid
+
     indices = []
     for part in choice.split(","):
         part = part.strip()
@@ -137,11 +148,12 @@ def choose_playlists(playlists):
             continue
         try:
             idx = int(part)
-            if 1 <= idx <= len(playlists):
+            if 1 <= idx <= len(valid):
                 indices.append(idx - 1)
         except ValueError:
             pass
-    return [playlists[i] for i in indices]
+
+    return [valid[i] for i in indices]
 
 def get_playlist_tracks(access_token, playlist_id):
     tracks = []
