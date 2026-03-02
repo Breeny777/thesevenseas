@@ -12,7 +12,7 @@ import argparse
 
 SPOTIFY_CLIENT_ID = "c7b81c4687a44ec7a664437aca3d0b8f"
 SPOTIFY_CLIENT_SECRET = "799ff32ed7de4c45ab64a588eda4962b"
-SPOTIFY_REDIRECT_URI = "https://192.168.4.5:9030/api/spotify/token"  # doesn't need to exist on server
+SPOTIFY_REDIRECT_URI = "https://localhost"  # doesn't need to exist on server
 
 TOKEN_PATH = Path.home() / ".config" / "spotify_lidarr" / "token.json"
 
