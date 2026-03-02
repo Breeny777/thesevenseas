@@ -102,7 +102,7 @@ services:
       - "32405:8686"
 
   spotify-to-plex:
-      image: jjdenhertog/spotify-to-plex:latest
+      image: jjdenhertog/spotify-to-plex:dev
       container_name: spotify-to-plex
       ports:
         - "8888:8888" # Critical for the first-time Spotify login "callback"
