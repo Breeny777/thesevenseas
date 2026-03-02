@@ -20,7 +20,7 @@ urllib3_cn.allowed_gai_family = allowed_gai_family
 
 SPOTIFY_CLIENT_ID = "c7b81c4687a44ec7a664437aca3d0b8f"
 SPOTIFY_CLIENT_SECRET = "799ff32ed7de4c45ab64a588eda4962b"
-SPOTIFY_REDIRECT_URI = "https://127.0.0.1/callback"  # doesn't need to exist on server
+SPOTIFY_REDIRECT_URI = "https://localhost/callback"  # doesn't need to exist on server
 
 TOKEN_PATH = Path.home() / ".config" / "spotify_lidarr" / "token.json"
 
