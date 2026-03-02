@@ -8,12 +8,12 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 import argparse
 import socket
-import requests.packages.urllib3.util.connection as urllib3_cn
+# import requests.packages.urllib3.util.connection as urllib3_cn
 
-def allowed_gai_family():
-    return socket.AF_INET  # force IPv4 for all requests
+# def allowed_gai_family():
+#     return socket.AF_INET  # force IPv4 for all requests
 
-urllib3_cn.allowed_gai_family = allowed_gai_family
+# urllib3_cn.allowed_gai_family = allowed_gai_family
 
 
 # ---------- CONFIG ----------
