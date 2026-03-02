@@ -55,7 +55,7 @@ def get_new_token_interactive():
         "client_id": SPOTIFY_CLIENT_ID,
         "response_type": "code",
         "redirect_uri": SPOTIFY_REDIRECT_URI,
-        "scope": "playlist-read-private playlist-read-collaborative",
+        "scope": "playlist-read-private playlist-read-collaborative playlist-read-public",
     }
     url = "https://accounts.spotify.com/authorize?" + urllib.parse.urlencode(params)
 
