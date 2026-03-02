@@ -135,10 +135,11 @@ def choose_playlists(playlists):
     valid = []
 
     for i, pl in enumerate(playlists, start=1):
-        track_count = pl.get("tracks", {}).get("total")
+        track_count = pl.get("tracks", {}).get("total") \
+            or pl.get("items", {}).get("total")
         if track_count is None:
-            # Skip playlist folders or malformed playlists
             continue
+
 
         valid.append(pl)
         print(f"{len(valid):3d}. {pl['name']} ({track_count} tracks)")
