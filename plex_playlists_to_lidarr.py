@@ -132,13 +132,30 @@ def search_lidarr(term, retries=2, delay=0.25):
 
     return []
 
+def find_album_in_lidarr(album_name, artist_name):
+    # 1. Try album-only search
+    results = search_lidarr(album_name)
+    candidates = []
 
-def pick_best_album(results):
-    # Lidarr 3.x search results for name queries usually contain "album" + "artist"
-    albums = [r for r in results if "album" in r and "artist" in r]
-    if not albums:
-        return None
-    return albums[0]["album"], albums[0]["artist"]
+    for r in results:
+        if "album" in r and "artist" in r:
+            lidarr_album = r["album"]["title"].strip().lower()
+            if lidarr_album.startswith(album_name.lower()):
+                candidates.append((r["album"], r["artist"]))
+
+    if candidates:
+        return candidates[0]
+
+    # 2. Try artist-only search
+    results = search_lidarr(artist_name)
+
+    for r in results:
+        if "album" in r and "artist" in r:
+            lidarr_album = r["album"]["title"].strip().lower()
+            if lidarr_album.startswith(album_name.lower()):
+                return (r["album"], r["artist"])
+
+    return None
 
 
 def add_album_to_lidarr(album, artist):
@@ -286,7 +303,7 @@ def process_playlist(pl_entry):
         term = f"{album_name} {artist_name}"
         results = search_lidarr(term)
 
-        album_artist = pick_best_album(results)
+        album_artist = find_album_in_lidarr(album_name, artist_name)
         if not album_artist:
             print("  No album match found in Lidarr.")
             continue
