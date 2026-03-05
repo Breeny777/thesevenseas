@@ -5,8 +5,8 @@ import xml.etree.ElementTree as ET
 PLEX_URL = "http://192.168.4.5:32400"
 PLEX_TOKEN = "N4uQMmC-SrGdyGcsSQEE"
 
-LIDARR_URL = "http://localhost:8686"
-LIDARR_API_KEY = "YOUR_LIDARR_API_KEY"
+LIDARR_URL = "http://192.168.4.5:32405"
+LIDARR_API_KEY = "99063e0d5e534bc58aa8fee7690a8734"
 
 DRY_RUN = True
 
