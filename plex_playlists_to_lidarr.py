@@ -1,6 +1,7 @@
 import json
 import requests
 import xml.etree.ElementTree as ET
+import time
 
 PLEX_URL = "http://192.168.4.5:32400"
 PLEX_TOKEN = "N4uQMmC-SrGdyGcsSQEE"
@@ -73,13 +74,37 @@ def load_missing_spotify_tracks(path=MISSING_TRACKS_FILE):
     return missing
 
 
-def search_lidarr(term):
-    r = requests.get(
-        f"{LIDARR_URL}/api/v1/search",
-        params={"term": term, "apikey": LIDARR_API_KEY},
-    )
-    r.raise_for_status()
-    return r.json()
+# ---------------------------------------------------------
+# BALANCED LIDARR SEARCH (0.25s delay + 2 retries)
+# ---------------------------------------------------------
+def search_lidarr(term, retries=2, delay=0.25):
+    for attempt in range(retries + 1):
+        try:
+            time.sleep(delay)
+            r = requests.get(
+                f"{LIDARR_URL}/api/v1/search",
+                params={"term": term, "apikey": LIDARR_API_KEY},
+                timeout=10,
+            )
+
+            if r.status_code == 503:
+                print(f"  Lidarr overloaded (503). Attempt {attempt+1}/{retries+1}.")
+                if attempt < retries:
+                    time.sleep(1 + attempt)
+                    continue
+                return []
+
+            r.raise_for_status()
+            return r.json()
+
+        except requests.exceptions.RequestException as e:
+            print(f"  Lidarr search error: {e}. Attempt {attempt+1}/{retries+1}.")
+            if attempt < retries:
+                time.sleep(1 + attempt)
+                continue
+            return []
+
+    return []
 
 
 def pick_best_artist(results):
