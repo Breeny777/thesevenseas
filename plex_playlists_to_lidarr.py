@@ -112,4 +112,72 @@ def choose_playlists(spotify_playlists, plex_playlists):
         print("No matching Plex playlists found for spotify-to-plex mappings.")
         return []
 
-    print("Available
+    print("Available playlists:")
+    for idx, pl in enumerate(entries, start=1):
+        print(f"{idx}. {pl['title']} (Plex ID {pl['ratingKey']})")
+
+    choice = input(
+        "Enter playlist numbers to process (comma-separated), or 'all': "
+    ).strip()
+
+    if choice.lower() == "all":
+        return entries
+
+    indices = set()
+    for part in choice.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        try:
+            i = int(part)
+            if 1 <= i <= len(entries):
+                indices.add(i - 1)
+        except ValueError:
+            pass
+
+    return [entries[i] for i in sorted(indices)]
+
+
+def process_playlist(pl_entry):
+    rk = pl_entry["ratingKey"]
+    title = pl_entry["title"]
+    print(f"\n=== Processing playlist: {title} (Plex ID {rk}) ===")
+
+    items = fetch_playlist_items(rk)
+    print(f"Found {len(items)} tracks in playlist")
+
+    artist_album_pairs = set()
+    for artist, album, track in items:
+        artist_album_pairs.add((artist, album))
+
+    print(f"Unique artist/album pairs: {len(artist_album_pairs)}")
+
+    for artist_name, album_name in sorted(artist_album_pairs):
+        print(f"\n{artist_name} — {album_name}")
+        results = search_lidarr_artist(artist_name)
+
+        best = pick_best_artist(results)
+        if not best:
+            print("  No Lidarr artist match.")
+            continue
+
+        print("  Matched Lidarr artist:", best["artistName"])
+        add_artist_to_lidarr(best)
+
+
+def main():
+    spotify_playlists = load_spotify_playlists(PLAYLISTS_JSON)
+    plex_playlists = fetch_plex_playlists()
+
+    selected = choose_playlists(spotify_playlists, plex_playlists)
+    if not selected:
+        print("No playlists selected.")
+        return
+
+    print(f"\nDRY_RUN = {DRY_RUN}")
+    for pl in selected:
+        process_playlist(pl)
+
+
+if __name__ == "__main__":
+    main()
