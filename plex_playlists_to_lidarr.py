@@ -14,7 +14,8 @@ LIDARR_API_KEY = "99063e0d5e534bc58aa8fee7690a8734"
 DRY_RUN = True
 
 PLAYLISTS_JSON = "config/spotify-to-plex/playlists.json"
-CSV_PATH = "config/spotify-to-plex/playlist_export.csv"  # Exportify CSV for this playlist
+SCRIPT_DIR = Path(__file__).resolve().parent
+CSV_PATH = SCRIPT_DIR / "playlist_export.csv"  # Exportify CSV for this playlist
 
 
 def plex_get(path):
