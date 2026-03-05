@@ -1,7 +1,9 @@
+import csv
 import json
 import requests
 import xml.etree.ElementTree as ET
 import time
+from pathlib import Path
 
 PLEX_URL = "http://192.168.4.5:32400"
 PLEX_TOKEN = "N4uQMmC-SrGdyGcsSQEE"
@@ -12,7 +14,7 @@ LIDARR_API_KEY = "99063e0d5e534bc58aa8fee7690a8734"
 DRY_RUN = True
 
 PLAYLISTS_JSON = "config/spotify-to-plex/playlists.json"
-MISSING_TRACKS_FILE = "config/spotify-to-plex/missing_tracks_spotify.txt"
+CSV_PATH = "config/spotify-to-plex/playlist_export.csv"  # Exportify CSV for this playlist
 
 
 def plex_get(path):
@@ -53,25 +55,48 @@ def fetch_playlist_items(rating_key):
         artist = track.get("grandparentTitle")
         album = track.get("parentTitle")
         title = track.get("title")
-        if artist and album:
+        if artist and album and title:
             items.append((artist, album, title))
     return items
 
 
-def load_missing_spotify_tracks(path=MISSING_TRACKS_FILE):
-    missing = []
-    try:
-        with open(path, "r") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                if "open.spotify.com/track/" in line:
-                    track_id = line.split("/")[-1]
-                    missing.append(track_id)
-    except FileNotFoundError:
-        pass
-    return missing
+def load_exportify_csv(path):
+    """
+    CSV header:
+    "Track URI","Track Name","Artist URI(s)","Artist Name(s)",
+    "Album URI","Album Name","Album Artist URI(s)","Album Artist Name(s)",
+    "Album Release Date","Album Image URL","Disc Number","Track Number",
+    "Track Duration (ms)","Track Preview URL","Explicit","Popularity",
+    "ISRC","Added By","Added At"
+    """
+    tracks = []
+    p = Path(path)
+    if not p.exists():
+        print(f"Exportify CSV not found at {path}")
+        return tracks
+
+    with p.open("r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            track_name = row.get("Track Name", "").strip()
+            artist_names = row.get("Artist Name(s)", "").strip()
+            album_name = row.get("Album Name", "").strip()
+            album_artist_names = row.get("Album Artist Name(s)", "").strip()
+
+            # Prefer album artist if present, else fall back to track artist
+            artist_for_album = album_artist_names or artist_names
+
+            if not track_name or not album_name or not artist_for_album:
+                continue
+
+            tracks.append(
+                {
+                    "track": track_name,
+                    "album": album_name,
+                    "artist": artist_for_album,
+                }
+            )
+    return tracks
 
 
 # ---------------------------------------------------------
@@ -107,52 +132,19 @@ def search_lidarr(term, retries=2, delay=0.25):
     return []
 
 
-def pick_best_artist(results):
-    artists = [r for r in results if "artistName" in r and "foreignArtistId" in r]
-    if not artists:
-        return None
-    return artists[0]
-
-
 def pick_best_album(results):
+    # Lidarr 3.x search results for name queries usually contain "album" + "artist"
     albums = [r for r in results if "album" in r and "artist" in r]
     if not albums:
         return None
     return albums[0]["album"], albums[0]["artist"]
 
 
-def add_artist_to_lidarr(artist):
-    payload = {
-        "artistName": artist["artistName"],
-        "foreignArtistId": artist["foreignArtistId"],
-        "qualityProfileId": 1,
-        "metadataProfileId": 1,
-        "rootFolderPath": "/media2/Music",
-        "monitored": True,
-        "addOptions": {
-            "monitor": "all",
-            "searchForMissingAlbums": True,
-        },
-    }
-
-    if DRY_RUN:
-        print("[DRY RUN] Would add artist to Lidarr:", payload["artistName"])
-        return
-
-    r = requests.post(
-        f"{LIDARR_URL}/api/v1/artist",
-        params={"apikey": LIDARR_API_KEY},
-        json=payload,
-    )
-    r.raise_for_status()
-    print("Added artist to Lidarr:", r.json().get("artistName", payload["artistName"]))
-
-
 def add_album_to_lidarr(album, artist):
     payload = {
         "title": album["title"],
-        "foreignAlbumId": album["foreignAlbumId"],
-        "foreignArtistId": artist["foreignArtistId"],
+        "foreignAlbumId": album.get("foreignAlbumId"),
+        "foreignArtistId": artist.get("foreignArtistId"),
         "qualityProfileId": 1,
         "metadataProfileId": 1,
         "monitored": True,
@@ -212,54 +204,86 @@ def choose_playlists(spotify_playlists, plex_playlists):
     return [entries[i] for i in sorted(indices)]
 
 
+def normalize_key(artist, album, track=None):
+    a = (artist or "").strip().lower()
+    b = (album or "").strip().lower()
+    if track is None:
+        return (a, b)
+    t = (track or "").strip().lower()
+    return (a, b, t)
+
+
 def process_playlist(pl_entry):
     rk = pl_entry["ratingKey"]
     title = pl_entry["title"]
     print(f"\n=== Processing playlist: {title} (Plex ID {rk}) ===")
 
-    items = fetch_playlist_items(rk)
-    print(f"Found {len(items)} tracks in Plex playlist")
+    # Plex side
+    plex_items = fetch_playlist_items(rk)
+    print(f"Found {len(plex_items)} tracks in Plex playlist")
 
-    missing_spotify_ids = load_missing_spotify_tracks()
+    plex_track_keys = {normalize_key(a, al, t) for a, al, t in plex_items}
 
-    total_spotify_tracks = len(items) + len(missing_spotify_ids)
+    # CSV side
+    csv_tracks = load_exportify_csv(CSV_PATH)
+    print(f"Loaded {len(csv_tracks)} tracks from Exportify CSV")
+
+    csv_track_keys = {
+        normalize_key(t["artist"], t["album"], t["track"]) for t in csv_tracks
+    }
+
+    # Compute missing tracks (in CSV but not in Plex)
+    missing_track_keys = csv_track_keys - plex_track_keys
+
+    # Map back to structured tracks
+    missing_tracks = []
+    for t in csv_tracks:
+        key = normalize_key(t["artist"], t["album"], t["track"])
+        if key in missing_track_keys:
+            missing_tracks.append(t)
+
+    total_spotify_tracks = len(csv_tracks)
+    matched_tracks = total_spotify_tracks - len(missing_tracks)
+
     print(f"\nPlaylist summary for {title}:")
-    print(f"  Total Spotify tracks: {total_spotify_tracks}")
-    print(f"  Tracks matched in Plex: {len(items)}")
-    print(f"  Missing tracks: {len(missing_spotify_ids)}")
+    print(f"  Total Spotify tracks (from CSV): {total_spotify_tracks}")
+    print(f"  Tracks matched in Plex: {matched_tracks}")
+    print(f"  Missing tracks: {len(missing_tracks)}")
 
-    if missing_spotify_ids:
-        print("\nMissing Spotify track IDs:")
-        for tid in missing_spotify_ids:
-            print("  -", tid)
+    if missing_tracks:
+        print("\nSample missing tracks (up to 10):")
+        for t in missing_tracks[:10]:
+            print(f"  - {t['artist']} — {t['album']} — {t['track']}")
 
-    # Artist imports for matched tracks
-    artist_album_pairs = set()
-    for artist, album, track in items:
-        artist_album_pairs.add((artist, album))
+    # Build unique missing albums
+    missing_album_keys = set()
+    missing_albums = []
 
-    print(f"\nUnique artist/album pairs (matched in Plex): {len(artist_album_pairs)}")
-
-    for artist_name, album_name in sorted(artist_album_pairs):
-        print(f"\n{artist_name} — {album_name}")
-        results = search_lidarr(artist_name)
-
-        best = pick_best_artist(results)
-        if not best:
-            print("  No Lidarr artist match.")
+    for t in missing_tracks:
+        key = normalize_key(t["artist"], t["album"], None)
+        if key in missing_album_keys:
             continue
+        missing_album_keys.add(key)
+        missing_albums.append(
+            {
+                "artist": t["artist"],
+                "album": t["album"],
+            }
+        )
 
-        print("  Matched Lidarr artist:", best["artistName"])
-        add_artist_to_lidarr(best)
+    print(f"\nUnique missing albums: {len(missing_albums)}")
 
-    # Album imports for missing tracks
-    print("\nResolving missing albums...")
+    # Resolve missing albums in Lidarr by name
+    seen_album_titles = set()
 
-    seen_albums = set()
+    for entry in missing_albums:
+        artist_name = entry["artist"]
+        album_name = entry["album"]
 
-    for track_id in missing_spotify_ids:
-        print(f"\nTrack ID {track_id}:")
-        results = search_lidarr(track_id)
+        print(f"\nResolving album: {artist_name} — {album_name}")
+
+        term = f"{album_name} {artist_name}"
+        results = search_lidarr(term)
 
         album_artist = pick_best_album(results)
         if not album_artist:
@@ -267,15 +291,16 @@ def process_playlist(pl_entry):
             continue
 
         album, artist = album_artist
-        album_key = album["foreignAlbumId"]
 
-        if album_key in seen_albums:
-            print(f"  Already processed album: {album['title']}")
+        # Deduplicate by album title + artist name (string-level)
+        dedupe_key = (album["title"].strip().lower(), artist["artistName"].strip().lower())
+        if dedupe_key in seen_album_titles:
+            print(f"  Already processed album: {album['title']} — {artist['artistName']}")
             continue
 
-        seen_albums.add(album_key)
+        seen_album_titles.add(dedupe_key)
 
-        print(f"  Album: {album['title']} — Artist: {artist['artistName']}")
+        print(f"  Matched album: {album['title']} — Artist: {artist['artistName']}")
         add_album_to_lidarr(album, artist)
 
 
@@ -289,6 +314,7 @@ def main():
         return
 
     print(f"\nDRY_RUN = {DRY_RUN}")
+    print(f"Using Exportify CSV: {CSV_PATH}")
     for pl in selected:
         process_playlist(pl)
 
