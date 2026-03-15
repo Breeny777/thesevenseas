@@ -358,20 +358,16 @@ services:
       - 'PGID=${PGID}'
     ports:
       - 32422:8181
-  
-  # huntarr:
-  #   container_name: huntarr
-  #   image: huntarr/huntarr:latest
-  #   restart: always
-  #   ports:
-  #     - "32416:9705"
-  #   volumes:
-  #     - '${ROOT}/config/huntarr/cache:/config'
-  #   environment:
-  #     - 'PUID=${PUID}'
-  #     - 'PGID=${PGID}'
-  #     - 'TZ=${TZ}'
-
+  newtarr:
+    image: ghcr.io/elfhosted/newtarr:latest
+    container_name: newtarr
+    restart: always
+    ports:
+      - "32407:9705"
+    volumes:
+      - '${ROOT}/config/newtarr:/config'
+    environment:
+      - TZ=${TZ}
   # ---- Media renamer and metadate finder -----   
   tinymediamanager:
     container_name: tinymediamanager
