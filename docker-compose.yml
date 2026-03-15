@@ -359,7 +359,7 @@ services:
     ports:
       - 32422:8181
   newtarr:
-    image: ghcr.io/elfhosted/newtarr:latest
+    image: ghcr.io/elfhosted/newtarr:rolling
     container_name: newtarr
     restart: always
     ports:
