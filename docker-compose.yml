@@ -101,28 +101,6 @@ services:
     ports:
       - "32405:8686"
 
-  spotify-to-plex:
-      image: jjdenhertog/spotify-to-plex:latest
-      container_name: spotify-to-plex
-      ports:
-        - "8888:8888" # Critical for the first-time Spotify login "callback"
-        - "9030:9030" # Optional, for the web UI
-      environment:
-        - PLEX_URL=http://192.168.4.5:32400
-        - PLEX_TOKEN=N4uQMmC-SrGdyGcsSQEE
-        - PLEX_APP_ID=eXf+f9ktw3CZ8i45OY468WxriOCtoFxuNPzVeDcAwfw=
-        - SPOTIFY_API_CLIENT_ID=f87a0ac7e9b1465c98b3f8d7668913fe
-        - SPOTIFY_API_CLIENT_SECRET=04d17cac176f4347896884be582c46f0
-        - SPOTIFY_API_REDIRECT_URI=https://192.168.4.5:9030/api/spotify/token
-        - ENCRYPTION_KEY=ae3c5f7e590aeab79371aed2ff0f4f6056b36937d04676ac830066836b918b80
-        # Lidarr Integration
-        - LIDARR_URL=http://192.168.4.5:32405 # Update with your Lidarr IP
-        - LIDARR_API_KEY=99063e0d5e534bc58aa8fee7690a8734
-        - LIDARR_ROOT_PATH=/media2/Music/ # Must match your Lidarr's root folder
-      volumes:
-        - ${ROOT}/config/spotify-to-plex:/app/config
-      restart: unless-stopped
-
   # ---- Indexer (Torrents) ----     
   prowlarr:
     container_name: prowlarr
@@ -136,6 +114,33 @@ services:
     restart: unless-stopped
     ports:
       - "32406:9696"
+
+  # ---- Download cleanup (Torrents) ----    
+  newtarr:
+    image: ghcr.io/elfhosted/newtarr:rolling
+    container_name: newtarr
+    restart: always
+    ports:
+      - "32407:9705"
+    volumes:
+      - '${ROOT}/config/newtarr:/config'
+    environment:
+      - TZ=${TZ}
+
+  # ---- integrated multi media search tool ----
+  overseerr:
+    container_name: overseerr
+    image: 'sctx/overseerr:latest'
+    environment:
+      - LOG_LEVEL=debug
+      - 'TZ=${TZ}'
+    ports:
+      - '32408:5055'
+    volumes:
+      - '${ROOT}/config/overseerr/config:/app/config'
+    restart: unless-stopped
+
+ # --- Captcha solver for indexers that use Cloudflare protection ----
   flaresolverr:
     container_name: flaresolverr
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -147,6 +152,21 @@ services:
     ports:
       - "${PORT:-32409}:8191"
     restart: unless-stopped
+
+  kapowarr:
+        container_name: kapowarr
+        image: mrcas/kapowarr:latest
+        environment:
+            - 'TZ=${TZ}'
+            - 'PUID=${PUID}'
+            - 'PGID=${PGID}'
+        volumes:
+            - '${ROOT}/config/kapowarr/config:/app/config'
+            - '${ROOT}/config/kapowarr/db:/app/db'
+            - '${HDDSTORAGE5}:/app/temp_downloads'
+            - '${HDDSTORAGE3}:/comics'
+        ports:
+            - 32410:5656  
 
   # ---- Download Client (Torrents) ----
   qbittorrent:
@@ -358,16 +378,7 @@ services:
       - 'PGID=${PGID}'
     ports:
       - 32422:8181
-  newtarr:
-    image: ghcr.io/elfhosted/newtarr:rolling
-    container_name: newtarr
-    restart: always
-    ports:
-      - "32407:9705"
-    volumes:
-      - '${ROOT}/config/newtarr:/config'
-    environment:
-      - TZ=${TZ}
+  
   # ---- Media renamer and metadate finder -----   
   tinymediamanager:
     container_name: tinymediamanager
@@ -390,18 +401,7 @@ services:
       - 32427:4000 # Webinterface
     restart: unless-stopped
 
-  # ---- integrated multi media search tool ----
-  overseerr:
-    container_name: overseerr
-    image: 'sctx/overseerr:latest'
-    environment:
-      - LOG_LEVEL=debug
-      - 'TZ=${TZ}'
-    ports:
-      - '32408:5055'
-    volumes:
-      - '${ROOT}/config/overseerr/config:/app/config'
-    restart: unless-stopped
+  
 
 volumes:
     data:
