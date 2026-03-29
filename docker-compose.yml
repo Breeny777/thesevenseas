@@ -163,6 +163,7 @@ services:
         volumes:
             - '${ROOT}/config/kapowarr:/config'
             - '${HDDSTORAGE3}/Comics:/comics'
+            - '${ROOT}/config/kapowarr/temp_downloads:/temp_downloads'
         ports:
             - 32410:5656  
 
