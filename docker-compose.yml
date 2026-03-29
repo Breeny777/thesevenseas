@@ -161,9 +161,9 @@ services:
             - 'PUID=${PUID}'
             - 'PGID=${PGID}'
         volumes:
-            - '${ROOT}/config/kapowarr:/config'
+            - '${ROOT}/config/kapowarr:/app/db'
             - '${HDDSTORAGE3}/Comics:/comics'
-            - '${ROOT}/config/kapowarr/temp_downloads:/temp_downloads'
+            - '${ROOT}/config/kapowarr/temp_downloads:/app/temp_downloads'
         ports:
             - 32410:5656  
 
