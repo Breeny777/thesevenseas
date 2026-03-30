@@ -266,6 +266,7 @@ services:
     volumes:
       - '${ROOT}/config/calibre:/config'
       - '${HDDSTORAGE2}:/media2'
+      - '${HDDSTORAGE3}:/media3'
     ports:
       - 32423:8080
       - 8181:8181
