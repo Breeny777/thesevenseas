@@ -149,7 +149,7 @@ services:
     ports:
       - '32408:5055'
     volumes:
-      - '${ROOT}/config/seerr/:/config'
+      - '${ROOT}/config/seerr/:/app/config'
     restart: unless-stopped  
 
  # --- Captcha solver for indexers that use Cloudflare protection ----
