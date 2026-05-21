@@ -128,17 +128,29 @@ services:
       - TZ=${TZ}
 
   # ---- integrated multi media search tool ----
-  overseerr:
-    container_name: overseerr
-    image: 'sctx/overseerr:latest'
+  # overseerr:
+  #   container_name: overseerr
+  #   image: 'sctx/overseerr:latest'
+  #   environment:
+  #     - LOG_LEVEL=debug
+  #     - 'TZ=${TZ}'
+  #   ports:
+  #     - '32408:5055'
+  #   volumes:
+  #     - '${ROOT}/config/overseerr/config:/app/config'
+  #   restart: unless-stopped
+
+  seerr:
+    container_name: seerr
+    image: ghcr.io/seerr-team/seerr:latest
     environment:
       - LOG_LEVEL=debug
       - 'TZ=${TZ}'
     ports:
       - '32408:5055'
     volumes:
-      - '${ROOT}/config/overseerr/config:/app/config'
-    restart: unless-stopped
+      - '${ROOT}/config/seerr/config:/app/config'
+    restart: unless-stopped  
 
  # --- Captcha solver for indexers that use Cloudflare protection ----
   flaresolverr:
