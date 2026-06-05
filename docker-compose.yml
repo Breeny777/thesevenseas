@@ -176,6 +176,8 @@ services:
       - 'TZ=${TZ}'
       - WEBUI_PORT=8080 # Port for the qBittorrent web UI
       - WEBUI_SECURE_COOKIE=false
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
     volumes:
       - '${ROOT}/config/qbit:/config'
       - '${HDDSTORAGE4}:/torrents'
