@@ -175,7 +175,7 @@ services:
       - 'PGID=${PGID}'
       - 'TZ=${TZ}'
       - WEBUI_PORT=8080 # Port for the qBittorrent web UI
-      - SECURE_COOKIE=false
+      - WEBUI_SECURE_COOKIE=false
     volumes:
       - '${ROOT}/config/qbit:/config'
       - '${HDDSTORAGE4}:/torrents'
