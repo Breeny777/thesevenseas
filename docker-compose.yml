@@ -127,19 +127,6 @@ services:
     environment:
       - TZ=${TZ}
 
-  # ---- integrated multi media search tool ----
-  # overseerr:
-  #   container_name: overseerr
-  #   image: 'sctx/overseerr:latest'
-  #   environment:
-  #     - LOG_LEVEL=debug
-  #     - 'TZ=${TZ}'
-  #   ports:
-  #     - '32408:5055'
-  #   volumes:
-  #     - '${ROOT}/config/overseerr/config:/app/config'
-  #   restart: unless-stopped
-
   seerr:
     container_name: seerr
     image: ghcr.io/seerr-team/seerr:latest
@@ -188,6 +175,7 @@ services:
       - 'PGID=${PGID}'
       - 'TZ=${TZ}'
       - WEBUI_PORT=8080 # Port for the qBittorrent web UI
+      - SECURE_COOKIE=false
     volumes:
       - '${ROOT}/config/qbit:/config'
       - '${HDDSTORAGE4}:/torrents'
