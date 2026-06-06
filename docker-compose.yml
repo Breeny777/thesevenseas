@@ -182,7 +182,7 @@ services:
       - '${ROOT}/config/qbit:/config'
       - '${HDDSTORAGE4}:/torrents'
     ports:
-      - 32419:8080 # Web UI access
+      - 3241:8080 # Web UI access
       - 6881:6881 # Peer-to-peer connections (TCP)
       - 6881:6881/udp # Peer-to-peer connections (UDP)
     restart: unless-stopped
