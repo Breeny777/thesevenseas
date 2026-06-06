@@ -332,6 +332,21 @@ services:
       DASHDOT_WIDGET_LIST: 'os,cpu,storage,ram,network,gpu'
       NVIDIA_DISABLE_REQUIRE: 'true'
 
+  
+  glances:
+    container_name: glances
+    image: nicolargo/glances:latest
+    restart: unless-stopped
+    pid: host
+    network_mode: host
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - GLANCES_OPT=-w
+    volumes:
+      - /:/mnt/host:ro
+
   # Container access proxy - DO NOT REMOVE
   docker-socket-proxy:
       container_name: docker-socket-proxy
