@@ -3,6 +3,18 @@
 # Comment out sections as required to stop containers being run
 
 services:
+  #---- Home automation ----
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+    - '${ROOT}/config/homeassistant:/config'
+    - /etc/localtime:/etc/localtime:ro
+    environment:
+    - 'TZ=${TZ}'
+
   # ---- Media Server ----
   plex:
     container_name: plex
