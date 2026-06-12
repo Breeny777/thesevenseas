@@ -1,0 +1,287 @@
+esphome:
+  name: homelab-oled
+
+  # Delay display initialization until after boot
+  on_boot:
+    priority: -10
+    then:
+      - delay: 5s
+      - lambda: |-
+          id(display_ready) = true;
+      - delay: 3s
+      - lambda: |-
+          id(splash_mode) = false;
+
+esp8266:
+  board: esp01_1m
+
+globals:
+  - id: display_ready
+    type: bool
+    initial_value: 'false'
+
+  - id: page
+    type: int
+    restore_value: no
+    initial_value: '0'
+
+  - id: splash_mode
+    type: bool
+    initial_value: 'true'
+
+  - id: splash_tick
+    type: int
+    initial_value: '0'
+  
+  - id: alert_level
+    type: int
+    initial_value: '0'   # 0 = none, 1 = warning, 2 = critical
+
+  - id: alert_message
+    type: std::string
+    initial_value: ""
+
+wifi:
+  min_auth_mode: WPA2
+  ssid: "InterBalls"
+  password: "daisyisla"
+  manual_ip:
+    static_ip: 192.168.4.201
+    gateway: 192.168.4.1
+    subnet: 255.255.255.0
+  ap:
+    ssid: "homelab_oled_fallback"
+    password: "fallback123"
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "xOkk1a3r1Va07m+xKB/wdhjJ3pqoVHtgWcQ1WSrtpIM="
+  reboot_timeout: 0s
+
+ota:
+  platform: esphome
+
+i2c:
+  sda: GPIO0
+  scl: GPIO2
+  scan: false
+
+font:
+  - file: "gfonts://Roboto"
+    id: font_small
+    size: 12
+
+  - file: "gfonts://Roboto"
+    id: font_large
+    size: 20
+
+display:
+  - platform: ssd1306_i2c
+    id: oled
+    model: "SSD1306 128x64"
+    address: 0x3C
+    rotation: 180
+    update_interval: never
+    lambda: |-
+      // Splash Screen
+      if (id(splash_mode)) {
+
+        // Title (centered)
+        it.printf(64, 10, id(font_large), TextAlign::CENTER, "Rack Status");
+
+        // Subtitle (centered)
+        it.printf(64, 35, id(font_small), TextAlign::CENTER, "Loading sensors");
+
+        // Animated dots
+        int dots = id(splash_tick) % 4;  // cycles 0–3
+        std::string dot_str = "";
+        for (int i = 0; i < dots; i++) dot_str += ".";
+
+        it.printf(64, 50, id(font_small), TextAlign::CENTER, "%s", dot_str.c_str());
+
+        return;
+      }
+
+      if (!id(display_ready)) return;
+
+      // ALERT PAGE OVERRIDE
+      if (id(alert_level) > 0) {
+
+        // Title based on priority
+        if (id(alert_level) == 1) {
+          it.printf(64, 10, id(font_large), TextAlign::CENTER, "WARNING");
+        } else if (id(alert_level) == 2) {
+          it.printf(64, 10, id(font_large), TextAlign::CENTER, "CRITICAL");
+        }
+
+        // Message
+        it.printf(64, 35, id(font_small), TextAlign::CENTER, "%s", id(alert_message).c_str());
+
+        // Optional blinking text for critical
+        if (id(alert_level) == 2) {
+          if ((id(splash_tick) % 2) == 0) {
+            it.printf(64, 55, id(font_small), TextAlign::CENTER, "CHECK NOW");
+          }
+        }
+
+        // FLASHING BORDER FOR CRITICAL ALERTS
+        if (id(alert_level) == 2) {
+          if ((id(splash_tick) % 2) == 0) {
+            it.line(0, 0, 127, 0);
+            it.line(0, 63, 127, 63);
+            it.line(0, 0, 0, 63);
+            it.line(127, 0, 127, 63);
+          }
+        }
+
+        return;
+      }
+
+      // Page 0 — Time
+      if (id(page) == 0) {
+        it.printf(0, 0, id(font_large), "Time");
+        it.strftime(0, 30, id(font_large), "%H:%M", id(homeassistant_time).now());
+      }
+
+      // Page 1 — System
+      if (id(page) == 1) {
+        it.printf(0, 0, id(font_small), "System");
+
+        // CPU %
+        if (id(cpu_used).has_state() && !isnan(id(cpu_used).state))
+          it.printf(0, 15, id(font_small), "CPU: %.0f%%", id(cpu_used).state);
+        else
+          it.printf(0, 15, id(font_small), "CPU: ...");
+
+        // RAM %
+        if (id(ram_used).has_state() && !isnan(id(ram_used).state))
+          it.printf(0, 30, id(font_small), "RAM: %.0f%%", id(ram_used).state);
+        else
+          it.printf(0, 30, id(font_small), "RAM: ...");
+
+        // CPU Temp
+        if (id(cpu_temp).has_state() && !isnan(id(cpu_temp).state))
+          it.printf(0, 45, id(font_small), "Temp: %.1f°C", id(cpu_temp).state);
+        else
+          it.printf(0, 45, id(font_small), "Temp: ...");
+
+        // Fan Speed (right side of bottom row)
+        if (id(fan_speed).has_state() && !isnan(id(fan_speed).state))
+          it.printf(70, 15, id(font_small), "Fan: %.0f", id(fan_speed).state);
+        else
+          it.printf(70, 15, id(font_small), "Fan: ...");
+      }
+
+            // Page 2 — Disk Usage
+      if (id(page) == 2) {
+        it.printf(0, 0, id(font_small), "Disk Usage");
+
+        // Host
+        if (id(disk_host).has_state() && !isnan(id(disk_host).state))
+          it.printf(0, 15, id(font_small), "Host: %.0f%%", id(disk_host).state);
+        else
+          it.printf(0, 15, id(font_small), "Host: ...");
+
+        // Pool1
+        if (id(disk_pool1).has_state() && !isnan(id(disk_pool1).state))
+          it.printf(0, 30, id(font_small), "Pool1: %.0f%%", id(disk_pool1).state);
+        else
+          it.printf(0, 30, id(font_small), "Pool1: ...");
+
+        // Pool2
+        if (id(disk_pool2).has_state() && !isnan(id(disk_pool2).state))
+          it.printf(0, 45, id(font_small), "Pool2: %.0f%%", id(disk_pool2).state);
+        else
+          it.printf(0, 45, id(font_small), "Pool2: ...");
+
+        // Pool3 (fits at bottom)
+        if (id(disk_pool3).has_state() && !isnan(id(disk_pool3).state))
+          it.printf(64, 45, id(font_small), "Pool3: %.0f%%", id(disk_pool3).state);
+        else
+          it.printf(64, 45, id(font_small), "Pool3: ...");
+      }
+
+# Delay the FIRST display update until after boot
+interval:
+  - interval: 10s
+    then:
+      - component.update: oled
+
+  - interval: 5s
+    then:
+      - lambda: |-
+          id(page)++;
+          if (id(page) > 2) id(page) = 0;
+  
+  - interval: 300ms
+    then:
+      - lambda: |-
+          id(splash_tick)++;
+
+  - interval: 500ms
+    then:
+      - lambda: |-
+          if (id(ha_alert_level).has_state()) {
+            id(alert_level) = (int) id(ha_alert_level).state;
+          }
+          if (id(ha_alert_message).has_state()) {
+            id(alert_message) = id(ha_alert_message).state;
+          }
+
+  - interval: 200ms
+    then:
+      - if:
+          condition:
+            lambda: 'return id(alert_level) > 0;'
+          then:
+            - component.update: oled
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+sensor:
+  - platform: homeassistant
+    id: ha_alert_level
+    entity_id: input_number.homelab_alert_level
+
+  - platform: homeassistant
+    id: disk_host
+    entity_id: sensor.rack_plexhost_mnt_host_disk_usage
+
+  - platform: homeassistant
+    id: disk_pool1
+    entity_id: sensor.rack_plexhost_mnt_host_pool1_disk_usage
+
+  - platform: homeassistant
+    id: disk_pool2
+    entity_id: sensor.rack_plexhost_mnt_host_pool2_disk_usage
+
+  - platform: homeassistant
+    id: disk_pool3
+    entity_id: sensor.rack_plexhost_mnt_host_pool3_disk_usage
+
+  - platform: homeassistant
+    id: cpu_used
+    entity_id: sensor.rack_plexhost_cpu_usage
+
+  - platform: homeassistant
+    id: ram_used
+    entity_id: sensor.rack_plexhost_memory_usage
+  
+  - platform: homeassistant
+    id: cpu_temp
+    entity_id: sensor.rack_plexhost_cputin_temperature
+  
+  - platform: homeassistant
+    id: fan_speed
+    entity_id: sensor.rack_plexhost_nct6798_1_fan_speed
+
+text_sensor:
+  - platform: homeassistant
+    id: ha_alert_message
+    entity_id: input_text.homelab_alert_message
+
