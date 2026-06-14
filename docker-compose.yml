@@ -389,7 +389,7 @@ services:
         - DELETE=1
         - SERVICES=1
         - NETWORKS=1
-        - LOG_LEVEL=info
+        - LOG_LEVEL=debug
       restart: unless-stopped
 
   # ---- Cloudflare Tunnels ----
