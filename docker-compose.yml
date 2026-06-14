@@ -177,18 +177,18 @@ services:
     restart: unless-stopped
 
   kapowarr:
-        container_name: kapowarr
-        image: mrcas/kapowarr:latest
-        environment:
-            - 'TZ=${TZ}'
-            - 'PUID=${PUID}'
-            - 'PGID=${PGID}'
-        volumes:
-            - '${ROOT}/config/kapowarr:/app/db'
-            - '${HDDSTORAGE3}/Comics:/comics'
-            - '${ROOT}/config/kapowarr/temp_downloads:/app/temp_downloads'
-        ports:
-            - 32410:5656  
+    container_name: kapowarr
+    image: mrcas/kapowarr:latest
+    environment:
+        - 'TZ=${TZ}'
+        - 'PUID=${PUID}'
+        - 'PGID=${PGID}'
+    volumes:
+        - '${ROOT}/config/kapowarr:/app/db'
+        - '${HDDSTORAGE3}/Comics:/comics'
+        - '${ROOT}/config/kapowarr/temp_downloads:/app/temp_downloads'
+    ports:
+        - 32410:5656  
 
   # ---- Download Client (Torrents) ----
   qbittorrent:
@@ -317,24 +317,24 @@ services:
 
   # ---- Dashboard services ----
   homarr:
-      container_name: homarr
-      image: ghcr.io/homarr-labs/homarr:latest
-      restart: unless-stopped
-      sysctls: 
-        - net.ipv6.conf.all.disable_ipv6=1 
-        - net.ipv6.conf.default.disable_ipv6=1
-      volumes:
-        # - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
-        - '${ROOT}/config/homarr:/appdata'
-      environment:
-        # - 'PUID=${PUID}'
-        # - 'PGID=${PGID}'
-        - 'TZ=${TZ}'
-        - SECRET_ENCRYPTION_KEY=7d0fc795f5ddf8ab10d51c20009ff8110b1a5923f644f43f3eb01e4fe672f320
-        - DOCKER_HOSTNAMES=192.168.4.5,192.168.4.17
-        - DOCKER_PORTS=2375,2375
-      ports:
-        - '32418:7575'
+    container_name: homarr
+    image: ghcr.io/homarr-labs/homarr:latest
+    restart: unless-stopped
+    sysctls: 
+      - net.ipv6.conf.all.disable_ipv6=1 
+      - net.ipv6.conf.default.disable_ipv6=1
+    volumes:
+      # - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - '${ROOT}/config/homarr:/appdata'
+    environment:
+      # - 'PUID=${PUID}'
+      # - 'PGID=${PGID}'
+      - 'TZ=${TZ}'
+      - SECRET_ENCRYPTION_KEY=7d0fc795f5ddf8ab10d51c20009ff8110b1a5923f644f43f3eb01e4fe672f320
+      - DOCKER_HOSTNAMES=192.168.4.5,192.168.4.17
+      - DOCKER_PORTS=2375,2375
+    ports:
+      - '32418:7575'
   dash:
     container_name: dash
     image: mauricenino/dashdot:nvidia
@@ -373,25 +373,25 @@ services:
 
   # Container access proxy - DO NOT REMOVE
   docker-socket-proxy:
-      container_name: docker-socket-proxy
-      image: tecnativa/docker-socket-proxy
-      ports:
-        - "2375:2375"
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-      environment:
-        - CONTAINERS=1
-        - INFO=1
-        - VERSION=1
-        - EVENTS=1
-        - STATS=1
-        - IMAGES=1
-        - POST=1
-        - DELETE=1
-        - SERVICES=1
-        - NETWORKS=1
-        - LOG_LEVEL=debug
-      restart: unless-stopped
+    container_name: docker-socket-proxy
+    image: tecnativa/docker-socket-proxy
+    ports:
+      - "2375:2375"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - CONTAINERS=1
+      - INFO=1
+      - VERSION=1
+      - EVENTS=1
+      - STATS=1
+      - IMAGES=1
+      - POST=1
+      - DELETE=1
+      - SERVICES=1
+      - NETWORKS=1
+      - LOG_LEVEL=debug
+    restart: unless-stopped
 
   # ---- Cloudflare Tunnels ----
   tunnel1-books:
