@@ -359,7 +359,7 @@ services:
   
   glances:
     container_name: glances
-    image: nicolargo/glances:latest
+    image: nicolargo/glances:3
     restart: unless-stopped
     pid: host
     network_mode: host
