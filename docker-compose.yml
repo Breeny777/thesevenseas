@@ -364,10 +364,10 @@ services:
     pid: host
     network_mode: host
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      - GLANCES_OPT="-w --config /app/glances/conf/glances.conf"
+      PUID: '${PUID}'
+      PGID: '${PGID}'
+      TZ: '${TZ}'
+      GLANCES_OPT: '-w --config /app/glances/conf/glances.conf'
     volumes:
       - /:/mnt/host:ro
       - '${ROOT}/config/glances/glances.conf:/app/glances/conf/glances.conf:ro'
