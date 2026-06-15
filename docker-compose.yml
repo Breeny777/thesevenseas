@@ -370,6 +370,7 @@ services:
       - GLANCES_OPT=-w
     volumes:
       - /:/mnt/host:ro
+      - '${ROOT}/config/glances/glances.conf:/glances/conf/glances.conf:ro'
 
   # Container access proxy - DO NOT REMOVE
   docker-socket-proxy:
