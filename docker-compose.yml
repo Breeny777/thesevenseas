@@ -359,18 +359,17 @@ services:
   
   glances:
     container_name: glances
-    image: nicolargo/glances:3.4.0
+    image: nicolargo/glances:latest
     restart: unless-stopped
     pid: host
     network_mode: host
     environment:
-      PUID: '${PUID}'
-      PGID: '${PGID}'
-      TZ: '${TZ}'
-      GLANCES_OPT: '-w --config /app/glances/conf/glances.conf'
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - GLANCES_OPT=-w
     volumes:
       - /:/mnt/host:ro
-      - '${ROOT}/config/glances/glances.conf:/app/glances/conf/glances.conf:ro'
 
   # Container access proxy - DO NOT REMOVE
   docker-socket-proxy:
