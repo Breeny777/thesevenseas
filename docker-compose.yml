@@ -129,9 +129,6 @@ services:
     container_name: prowlarr
     image: lscr.io/linuxserver/prowlarr:latest
     network_mode: host
-    sysctls: 
-      - net.ipv6.conf.all.disable_ipv6=1 
-      - net.ipv6.conf.default.disable_ipv6=1
     environment:
       - 'PUID=${PUID}'
       - 'PGID=${PGID}'
