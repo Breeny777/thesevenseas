@@ -376,8 +376,8 @@ services:
   docker-socket-proxy:
     container_name: docker-socket-proxy
     image: tecnativa/docker-socket-proxy
-    ports:
-      - "2375:2375"
+    # ports:
+    #   - "2375:2375"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
