@@ -325,15 +325,14 @@ services:
       - net.ipv6.conf.all.disable_ipv6=1 
       - net.ipv6.conf.default.disable_ipv6=1
     volumes:
-      # - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
       - '${ROOT}/config/homarr:/appdata'
     environment:
       # - 'PUID=${PUID}'
       # - 'PGID=${PGID}'
       - 'TZ=${TZ}'
       - SECRET_ENCRYPTION_KEY=7d0fc795f5ddf8ab10d51c20009ff8110b1a5923f644f43f3eb01e4fe672f320
-      - DOCKER_HOSTNAMES=192.168.4.5,192.168.4.17
-      - DOCKER_PORTS=2375,2375
+ 
     ports:
       - '32418:7575'
   dash:
