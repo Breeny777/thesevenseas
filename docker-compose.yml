@@ -12,6 +12,7 @@ services:
     volumes:
     - '${ROOT}/config/homeassistant:/config'
     - /etc/localtime:/etc/localtime:ro
+    
     environment:
     - 'TZ=${TZ}'
 
