@@ -12,7 +12,7 @@ services:
     volumes:
     - '${ROOT}/config/homeassistant:/config'
     - /etc/localtime:/etc/localtime:ro
-    
+    - /var/run/docker.sock:/var/run/docker.sock
     environment:
     - 'TZ=${TZ}'
 
